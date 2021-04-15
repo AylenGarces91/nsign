@@ -1,0 +1,26 @@
+{
+    'name': 'HubSpot odoo Integration',
+    'category': 'Sales',
+    'version': '0.0',
+    'summary': """Permite importar datos como productos, ordernes, categorias y otros.""",
+    'description': """""",
+    'depends': ['sale_management','sale_stock','product','base'],
+    'data': [
+        'security/hubspot.xml',
+        'security/ir.model.access.csv',
+        'views/hubspot_operation.xml',
+        'views/hubspot_crm.xml',
+        'views/hubspot_menu.xml',
+        'views/contact.xml',
+        'views/product.xml',
+        'views/sale_order.xml',
+    ],
+    'author': 'Develoop Software',
+    'images': ['static/description/hubspot.png'],
+    'maintainer': 'Develoop Software',
+    'website': 'https://www.develoop.net',
+    'demo': [],
+    'installable': True,
+    'application': True,
+    'auto_install': False
+}

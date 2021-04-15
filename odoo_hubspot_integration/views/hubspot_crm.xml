@@ -1,0 +1,124 @@
+<odoo>
+    <data>
+        <record id="view_hubspot_crm" model="ir.ui.view">
+            <field name="name">HubSpot detalles de conexión</field>
+            <field name="model">hubspot.crm</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="HubSpot detalles de conexión">
+                    <field name="name"/>
+                    <field name="hubspot_api_key"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_form_crm_details" model="ir.ui.view">
+            <field name="name">HubSpot detalles de conexión</field>
+            <field name="model">hubspot.crm</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="HubSpot detalles de conexión">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" name="action_view_hubspot_orders" class="oe_stat_button" icon="fa-cart-plus" string="Ordenes"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="hubspot_api_key" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Contactos" name="page_contact">
+                                <group>
+                                    <group>
+                                        <field name="contact_sync"/>
+                                        <field name="contact_import"/>
+                                        <field name="contact_export"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <button name="action_contact_import" type="object" class="btn btn-primary">
+                                            <i class="fa fa-cloud-download pr-1"/><span>Importar Contactos</span>
+                                        </button>
+                                        <button name="action_contact_export" type="object" class="btn btn-primary">
+                                            <i class="fa fa-cloud-download pr-1"/><span>Exportar Contactos</span>
+                                        </button>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Compañias" name="page_companies">
+                                <group>
+                                    <group>
+                                        <field name="company_sync"/>
+                                        <field name="company_import"/>
+                                        <field name="company_export"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <button name="action_company_import" type="object" class="btn btn-primary" >
+                                            <i class="fa fa-cloud-download pr-1"/><span>Importar Compañias</span>
+                                        </button>
+                                        <button name="action_company_export" type="object" class="btn btn-primary" >
+                                            <i class="fa fa-cloud-download pr-1"/><span>Exportar Compañias</span>
+                                        </button>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Productos" name="page_product">
+                                <group>
+                                    <group>
+                                        <field name="product_sync"/>
+                                        <field name="product_import"/>
+                                        <field name="product_export"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <button name="action_product_import" type="object" class="btn btn-primary" >
+                                            <i class="fa fa-cloud-download pr-1"/><span>Importar Productos</span>
+                                        </button>
+                                        <button name="action_product_export" type="object" class="btn btn-primary" >
+                                            <i class="fa fa-cloud-download pr-1"/><span>Exportar Productos</span>
+                                        </button>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Ventas" name="page_sales">
+                                <group>
+                                    <group>
+                                        <field name="sale_sync"/>
+                                        <field name="sale_import"/>
+                                        <field name="sale_export"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <button name="action_sale_import" type="object" class="btn btn-primary" >
+                                            <i class="fa fa-cloud-download pr-1"/><span>Importar Ventas</span>
+                                        </button>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_hubspot_crm" model="ir.actions.act_window">
+            <field name="name">Detalles de conexión</field>
+            <field name="res_model">hubspot.crm</field>
+            <field name='view_mode'>tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click para crear una conexión a HubSpot.
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>
