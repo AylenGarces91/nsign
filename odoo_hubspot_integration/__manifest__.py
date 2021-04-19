@@ -14,6 +14,7 @@
         'views/contact.xml',
         'views/product.xml',
         'views/sale_order.xml',
+        'data/ir_cron.xml',
     ],
     'author': 'Develoop Software',
     'images': ['static/description/hubspot.png'],

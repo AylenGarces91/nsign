@@ -14,22 +14,21 @@ class hubspotCredentailDetails(models.Model):
     
     name = fields.Char("Nombre", required=True)
     hubspot_api_key = fields.Char("HubSpot API Key", required=True, help="Go in the hubspot back office and get Key.")
-    
-    contact_sync = fields.Boolean(string="Sincronizar Contactos", default=False)
-    contact_import = fields.Boolean(string="Importar Contactos", default=False)
-    contact_export = fields.Boolean(string="Exportar Contactos", default=False)
 
-    company_sync = fields.Boolean(string="Sincronizar Compañias", default=False)
-    company_import = fields.Boolean(string="Importar Compañias", default=False)
-    company_export = fields.Boolean(string="Exportar Compañias", default=False)
+    company_sync = fields.Boolean(string="Sincronizar Compañias", default=True)
+    company_import = fields.Boolean(string="Importar Compañias", default=True)
+    company_export = fields.Boolean(string="Exportar Compañias", default=True)
 
-    product_sync = fields.Boolean(string="Sincronizar Productos", default=False)
-    product_import = fields.Boolean(string="Importar Productos", default=False)
-    product_export = fields.Boolean(string="Exportar Productos", default=False)
+    contact_sync = fields.Boolean(string="Sincronizar Contactos", default=True)
+    contact_import = fields.Boolean(string="Importar Contactos", default=True)
+    contact_export = fields.Boolean(string="Exportar Contactos", default=True)
 
-    sale_sync = fields.Boolean(string="Sincronizar Ventas", default=False)
-    sale_import = fields.Boolean(string="Importar Ventas", default=False)
-    sale_export = fields.Boolean(string="Exportar Ventas", default=False)
+    product_sync = fields.Boolean(string="Sincronizar Productos", default=True)
+    product_import = fields.Boolean(string="Importar Productos", default=True)
+    product_export = fields.Boolean(string="Exportar Productos", default=True)
+
+    sale_sync = fields.Boolean(string="Sincronizar Ventas", default=True)
+    sale_import = fields.Boolean(string="Importar Ventas", default=True)
     sale_order_id_imported = fields.Char(string="Ultima Venta Importada")
 
     def create_hubspot_operation(self, operation, operation_type, hubspot_crm_id, log_message):
@@ -170,3 +169,22 @@ class hubspotCredentailDetails(models.Model):
         dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
         us = int(us.rstrip("Z"), 10)
         return dt + datetime.timedelta(microseconds=us)
+
+    def auto_sincronize_hubspot_odoo(self):
+        if self.company_import:
+            self.env['res.partner'].hubspot_to_odoo_import_companies(self)
+        if self.company_export:
+            self.env['res.partner'].hubspot_to_odoo_export_companies(self)
+
+        if self.contact_import:
+            self.env['res.partner'].hubspot_to_odoo_import_contacts(self)
+        if self.contact_export:
+            self.env['res.partner'].hubspot_to_odoo_export_contacts(self)
+        
+        if self.product_import:
+            self.env['product.template'].hubsport_to_odoo_import_product_all(self)
+        if self.product_export:
+            self.env['product.template'].hubsport_to_odoo_export_product_all(self)
+        
+        if self.sale_import:
+            self.env['sale.order'].hubspot_to_odoo_import_orders(self)

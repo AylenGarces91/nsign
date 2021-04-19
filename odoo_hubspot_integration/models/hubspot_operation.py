@@ -17,7 +17,8 @@ class hubspotOperation(models.Model):
         ('product_variant', 'Product Variant'),
         ('order', 'Order'),
         ('product_category', 'Product Category'),
-        ('stock', 'Stock')
+        ('stock', 'Stock'),
+        ('user', 'User'),
         ], string="Operación")
     hubspot_operation_type = fields.Selection([
         ('export', 'Export'),
@@ -55,7 +56,8 @@ class hubspotOperationDetail(models.Model):
         ('product_variant', 'Product Variant'),
         ('order', 'Order'),
         ('product_category', 'Product Category'),
-        ('stock', 'Stock')
+        ('stock', 'Stock'),
+        ('user', 'User')
         ], string="Operación")
     hubspot_operation_type = fields.Selection([
         ('export', 'Export'),

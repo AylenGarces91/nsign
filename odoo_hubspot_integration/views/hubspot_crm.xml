@@ -20,7 +20,7 @@
                 <form string="HubSpot detalles de conexión">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button type="object" name="action_view_hubspot_orders" class="oe_stat_button" icon="fa-cart-plus" string="Ordenes"/>
+                            <button type="object" name="auto_sincronize_hubspot_odoo" class="oe_stat_button" icon="fa-cart-plus" string="Ordenes"/>
                         </div>
                         <group>
                             <group>
@@ -29,29 +29,10 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Contactos" name="page_contact">
-                                <group>
-                                    <group>
-                                        <field name="contact_sync"/>
-                                        <field name="contact_import"/>
-                                        <field name="contact_export"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <group>
-                                        <button name="action_contact_import" type="object" class="btn btn-primary">
-                                            <i class="fa fa-cloud-download pr-1"/><span>Importar Contactos</span>
-                                        </button>
-                                        <button name="action_contact_export" type="object" class="btn btn-primary">
-                                            <i class="fa fa-cloud-download pr-1"/><span>Exportar Contactos</span>
-                                        </button>
-                                    </group>
-                                </group>
-                            </page>
                             <page string="Compañias" name="page_companies">
                                 <group>
                                     <group>
-                                        <field name="company_sync"/>
+                                        <separator string="Sincronizar Compañias"/>
                                         <field name="company_import"/>
                                         <field name="company_export"/>
                                     </group>
@@ -67,10 +48,29 @@
                                     </group>
                                 </group>
                             </page>
+                            <page string="Contactos" name="page_contact">
+                                <group>
+                                    <group>
+                                        <separator string="Sincronizar Contactos"/>
+                                        <field name="contact_import"/>
+                                        <field name="contact_export"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <button name="action_contact_import" type="object" class="btn btn-primary">
+                                            <i class="fa fa-cloud-download pr-1"/><span>Importar Contactos</span>
+                                        </button>
+                                        <button name="action_contact_export" type="object" class="btn btn-primary">
+                                            <i class="fa fa-cloud-download pr-1"/><span>Exportar Contactos</span>
+                                        </button>
+                                    </group>
+                                </group>
+                            </page>
                             <page string="Productos" name="page_product">
                                 <group>
                                     <group>
-                                        <field name="product_sync"/>
+                                        <separator string="Sincronizar Productos"/>
                                         <field name="product_import"/>
                                         <field name="product_export"/>
                                     </group>
@@ -89,9 +89,8 @@
                             <page string="Ventas" name="page_sales">
                                 <group>
                                     <group>
-                                        <field name="sale_sync"/>
+                                        <separator string="Sincronizar Ventas"/>
                                         <field name="sale_import"/>
-                                        <field name="sale_export"/>
                                     </group>
                                 </group>
                                 <group>

@@ -11,6 +11,83 @@ class ResPartner_HubSpot(models.Model):
     hubspot_contact_id = fields.Char("HubSpot Contact Id")
     hubspot_contact_imported = fields.Boolean(default=False, string="HubSpot es Importado")
     hubspot_crm_id = fields.Many2one('hubspot.crm', string="HubSpot Id")
+    hubspot_write_date = fields.Datetime(string="HubSpot Fecha Modificación")
+
+
+    def write(self, values):
+        data = super(ResPartner_HubSpot, self).write(values)
+        ################################################################
+        self._cr.commit()
+        try:
+            if self.hubspot_contact_id:
+                self = data
+                self.contact_sincronize(data)
+        except Exception as e:
+            _logger.info("Error al exportar a hubspot {}".format(e))
+        ################################################################
+        return data
+
+
+    def contact_sincronize(self):
+        hubspot_operation = hubspot_crm.create_hubspot_operation('contact_company','import',hubspot_crm,'Procesando...')
+        self._cr.commit()
+        try:
+            if self.is_company == True:
+                response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("objects/companies/%s" % self.hubspot_contact_id))
+            if self.is_company == False:
+                response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("objects/contacts/%s" % self.hubspot_contact_id))
+
+            if response_status:
+                fecha_modificacion = company.get('properties').get('hs_lastmodifieddate')
+                fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
+                if fecha_modificacion < self.hubspot_write_date:
+                    
+                    if self.is_company == True:
+                        payload = {
+                            "properties":{
+                            "name": company.name,
+                            "phone": company.phone or "",
+                            "state": company.state_id.name or "",
+                            "domain": company.website or "",
+                            "industry": company.category_id.name or ""
+                            }
+                        }
+                        response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("PATCH",("objects/companies/%s" % self.hubspot_contact_id), {}, payload)
+                        self.write({
+                            'hubspot_write_date': response_data.get('properties').get('hs_lastmodifieddate')
+                        })
+                    if self.is_company == False:
+                        payload = {
+                            "properties":{
+                                "firstname": contact.name,
+                                "lastname": "",
+                                "email": contact.email or "",
+                                "phone": contact.phone or "",
+                                "website": contact.website or "",
+                                "company": contact.company_name or ""
+                            }
+                        }
+                        response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("PATCH",("objects/contacts/%s" % self.hubspot_contact_id), {}, payload)
+                        self.write({
+                            'hubspot_write_date': response_data.get('properties').get('hs_lastmodifieddate')
+                        })
+
+                    process_message = "Contacto Actualizado en HubSpot: {0}".format(contact_company.name)
+                    
+                hubspot_crm.create_hubspot_operation_detail('contact_company', 'import', False, response_data, hubspot_operation, False, process_message)
+                self._cr.commit()
+            else:
+                process_message = "Error en la respuesta de importación de contacto Empresa {}".format(response_data)
+                hubspot_crm.create_hubspot_operation_detail('contact_company','import','',response_data,hubspot_operation,True,process_message)
+
+            hubspot_operation.write({'hubspot_message': "¡El proceso de importar contacto empresa se completó con éxito!"})
+        except Exception as e:
+            process_message="Error en la respuesta de importación de contacto empresa {}".format(e)
+            _logger.info(process_message)
+            hubspot_crm.create_hubspot_operation_detail('contact_company','import',response_data,process_message,hubspot_operation,True,process_message)
+            hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
+        self._cr.commit()
+        return contact_company
 
 
     def get_company_data_from_hubspot(self, hubspot_crm, hubspot_company_id):
@@ -125,8 +202,7 @@ class ResPartner_HubSpot(models.Model):
                     "sorts":[
                         {"direction": "ASCENDING", "propertyName":"hs_object_id"}
                     ],
-                    "properties":["hs_object_id,firstname,lastname,email,zip,address,phone,mobilephone,website,country,city,state,company"],
-                    "associations":["company"],
+                    "properties":["hs_object_id,firstname,lastname,email,zip,address,phone,mobilephone,website,country,city,state,hubspot_owner_id,company"],
                     "limit":50,
                     "after":after
                 }
@@ -144,10 +220,33 @@ class ResPartner_HubSpot(models.Model):
                         state = contact.get('properties').get('state',False) if contact.get('properties').get('state') is not None else False
                         state_id = self.env['res.country.state'].search([('code', 'like', state[0])], limit=1) if state else False
 
+                        user_id = contact.get('properties').get('hubspot_owner_id',False)
+                        if user_id and user_id != '':
+                            user_id = self.env['res.users'].get_user_data_from_hubspot(hubspot_crm, user_id)
+                        else:
+                            user_id = False
+
+                        fecha_modificacion = contact.get('properties').get('lastmodifieddate')
+                        fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
+
+                        company_id = False
+                        assoc_status, assoc_res = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("objects/contacts/%s/associations/companies" % contact.get('id')))
+                        if assoc_status:
+                            try:
+                                company_id = assoc_res.get('results')[0].get('id')
+                                company_id = self.env['res.partner'].search([('hubspot_contact_id','=',company_id)])
+                                if company_id:
+                                    company_id = company_id.id
+                            except Exception as e:
+                                pass
+                        
+                        name = contact.get('properties').get('firstname','') if contact.get('properties').get('firstname','') is not None else ''
+                        name = name + ' ' + contact.get('properties').get('lastname','') if contact.get('properties').get('lastname','') is not None else ''
+
                         if not contact_info:
                             #creamos el contacto
                             contact_company = self.env['res.partner'].create({
-                                'name': contact.get('properties').get('firstname','') + " " + contact.get('properties').get('lastname',''),
+                                'name': name,
                                 'email': contact.get('properties').get('email',False),
                                 'phone': contact.get('properties').get('phone',False),
                                 'mobile': contact.get('properties').get('mobilephone',False),
@@ -157,30 +256,38 @@ class ResPartner_HubSpot(models.Model):
                                 'country_id': country_id.id if country_id else False,
                                 'state_id': state_id.id if state_id else False,
                                 'zip': contact.get('properties').get('zip',False),
+                                'user_id': user_id.id if user_id else False,
+                                'parent_id': company_id,
                                 'is_company': False,
                                 'hubspot_contact_id': contact.get('properties').get('hs_object_id'),
                                 'hubspot_contact_imported': True,
-                                'hubspot_crm_id': hubspot_crm.id
+                                'hubspot_crm_id': hubspot_crm.id,
+                                'hubspot_write_date': fecha_modificacion,
                             })
                             process_message = "Contacto Creada: {0}".format(contact_company.name)
                         else:
-                            # editamos el contacto
-                            contact_info.write({
-                                'name': contact.get('properties').get('firstname','') + " " + contact.get('properties').get('lastname',''),
-                                'email': contact.get('properties').get('email',False),
-                                'phone': contact.get('properties').get('phone',False),
-                                'mobile': contact.get('properties').get('mobilephone',False),
-                                'website': contact.get('properties').get('website',False),
-                                'street': contact.get('properties').get('address',False),
-                                'city': contact.get('properties').get('city',False),
-                                'country_id': country_id.id if country_id else False,
-                                'state_id': state_id.id if state_id else False,
-                                'zip': contact.get('properties').get('zip',False),
-                                'is_company': False,
-                                'hubspot_contact_id': contact.get('properties').get('hs_object_id'),
-                            })
-                            process_message = "Contacto Actualizada: {0}".format(contact_info.name)
-                        
+                            if fecha_modificacion > contact_info.write_date:
+                                # editamos el contacto
+                                contact_info.write({
+                                    'name': name,
+                                    'email': contact.get('properties').get('email',False),
+                                    'phone': contact.get('properties').get('phone',False),
+                                    'mobile': contact.get('properties').get('mobilephone',False),
+                                    'website': contact.get('properties').get('website',False),
+                                    'street': contact.get('properties').get('address',False),
+                                    'city': contact.get('properties').get('city',False),
+                                    'country_id': country_id.id if country_id else False,
+                                    'state_id': state_id.id if state_id else False,
+                                    'zip': contact.get('properties').get('zip',False),
+                                    'user_id': user_id.id if user_id else False,
+                                    'is_company': False,
+                                    'hubspot_contact_id': contact.get('properties').get('hs_object_id'),
+                                    'hubspot_write_date': fecha_modificacion,
+                                })
+                                process_message = "Contacto Actualizada: {0}".format(contact_info.name)
+                            else:
+                                process_message = "Contacto no actualizado por fecha de modificación: {0}".format(contact_info.name)
+
                         hubspot_crm.create_hubspot_operation_detail('customer', 'import', False, response_data, hubspot_operation, False, process_message)
                         self._cr.commit()
 
@@ -226,7 +333,7 @@ class ResPartner_HubSpot(models.Model):
                 if response_status:
                     for company in response_data.get('results',[]):
                         company_info = self.env['res.partner'].search([('hubspot_contact_id','=',company.get('id')),('is_company','=',True)], limit=1)
-                        if company_info:
+                        if not company_info:
                             company_info = self.env['res.partner'].search([('is_company','=',True),('name','=',company.get('properties').get('name'))], limit=1)
 
                         country = company.get('properties').get('country',False) if company.get('properties').get('country') is not None else False
@@ -234,6 +341,9 @@ class ResPartner_HubSpot(models.Model):
                         
                         state = company.get('properties').get('state',False) if company.get('properties').get('state') is not None else False
                         state_id = self.env['res.country.state'].search([('code', 'like', state[0])], limit=1) if state else False
+
+                        fecha_modificacion = company.get('properties').get('hs_lastmodifieddate')
+                        fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
 
                         if not company_info:
                             #creamos la compania
@@ -249,24 +359,30 @@ class ResPartner_HubSpot(models.Model):
                                 'is_company': True,
                                 'hubspot_contact_id': company.get('properties').get('hs_object_id'),
                                 'hubspot_contact_imported': True,
-                                'hubspot_crm_id': hubspot_crm.id
+                                'hubspot_crm_id': hubspot_crm.id,
+                                'hubspot_write_date': fecha_modificacion,
                             })
                             process_message = "Contacto Compañia Creado: {0}".format(contact_company.name)
                         else:
-                            # editamos la compania
-                            company_info.write({
-                                'name': company.get('properties').get('name'),
-                                'phone': company.get('properties').get('phone',False),
-                                'website': company.get('properties').get('website',False),
-                                'street': company.get('properties').get('address',False),
-                                'city': company.get('properties').get('city',False),
-                                'country_id': country_id.id if country_id else False,
-                                'state_id': state_id.id if state_id else False,
-                                'zip': company.get('properties').get('zip',False),
-                                'is_company': True,
-                                'hubspot_contact_id': company.get('properties').get('hs_object_id'),
-                            })
-                            process_message = "Compania Actualizada: {0}".format(company_info.name)
+                            if fecha_modificacion > company_info.hubspot_write_date:
+                                # editamos la compania en odoo
+                                company_info.write({
+                                    'name': company.get('properties').get('name'),
+                                    'phone': company.get('properties').get('phone',False),
+                                    'website': company.get('properties').get('website',False),
+                                    'street': company.get('properties').get('address',False),
+                                    'city': company.get('properties').get('city',False),
+                                    'country_id': country_id.id if country_id else False,
+                                    'state_id': state_id.id if state_id else False,
+                                    'zip': company.get('properties').get('zip',False),
+                                    'is_company': True,
+                                    'hubspot_contact_id': company.get('properties').get('hs_object_id'),
+                                    'hubspot_write_date': fecha_modificacion,
+                                })
+                                process_message = "Compañia Actualizada: {0}".format(company_info.name)
+                            else:
+                                process_message = "Compañia no es necesario actualizar por fecha de modificación: {0}".format(company_info.name)
+
                         hubspot_crm.create_hubspot_operation_detail('contact_company', 'import', True, response_data, hubspot_operation, False, process_message)
                         self._cr.commit()
 
@@ -287,7 +403,9 @@ class ResPartner_HubSpot(models.Model):
             hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
         self._cr.commit()
 
-    def hubspot_to_odoo_export_contacts(self, hubspot_crm = False):
+
+
+    def hubspot_to_odoo_export_contacts(self, hubspot_crm):
         hubspot_operation = hubspot_crm.create_hubspot_operation('customer','export',hubspot_crm,'Procesando...')
         self._cr.commit()
         try:
@@ -308,9 +426,10 @@ class ResPartner_HubSpot(models.Model):
                     if response_status:
                         contact.write({
                             'hubspot_contact_id': response_data.get('id'),
-                            'hubspot_crm_id': hubspot_crm.id
+                            'hubspot_crm_id': hubspot_crm.id,
+                            'hubspot_write_date': response_data.get('properties').get('hs_lastmodifieddate'),
                         })
-                        process_message = "Contacto Actualizado en odoo: {}".format(contact.name)
+                        process_message = "Contacto creado en hubspot: {}".format(contact.name)
                     else:
                         process_message="Error en la exportación del contacto {}".format(contact.name)
                         hubspot_crm.create_hubspot_operation_detail('customer','export',response_data,process_message,hubspot_operation,True,process_message)
@@ -324,7 +443,7 @@ class ResPartner_HubSpot(models.Model):
             hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
         self._cr.commit()
 
-    def hubspot_to_odoo_export_companies(self, hubspot_crm = False):
+    def hubspot_to_odoo_export_companies(self, hubspot_crm):
         hubspot_operation = hubspot_crm.create_hubspot_operation('contact_company','export',hubspot_crm,'Procesando...')
         self._cr.commit()
         try:
@@ -344,9 +463,10 @@ class ResPartner_HubSpot(models.Model):
                     if response_status:
                         company.write({
                            'hubspot_contact_id': response_data.get('id'),
-                           'hubspot_crm_id': hubspot_crm.id
+                           'hubspot_crm_id': hubspot_crm.id,
+                           'hubspot_write_date': response_data.get('properties').get('hs_lastmodifieddate'),
                         })
-                        process_message = "Compañia Actualizado en odoo: {}".format(company.company_id.name)
+                        process_message = "Compañia creado en hubspot: {}".format(company.company_id.name)
                     else:
                         process_message = "Error en la exportación del contacto {}".format(company.company_id.name)
                         hubspot_crm.create_hubspot_operation_detail('customer','export',response_data,process_message,hubspot_operation,True,process_message)

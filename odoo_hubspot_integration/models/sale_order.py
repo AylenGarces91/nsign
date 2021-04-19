@@ -7,6 +7,7 @@ _logger = logging.getLogger("hubspot")
 
 
 class SaleOrder_HubSpot(models.Model):
+    
     _inherit = "sale.order"
 
     hubspot_order_id = fields.Char("HubSpot Id", copy=False)
@@ -65,9 +66,11 @@ class SaleOrder_HubSpot(models.Model):
 
                                 #obtenemos datos del contacto y empresa en odoo
                                 if contact_id:
-                                    contact = self.env['res.partner'].get_contact_data_from_hubspot(hubspot_crm, contact_id)
+                                    contact = self.env['res.partner'].search([('hubspot_contact_id', '=', response_data.get('id')),('is_company','=',False)], limit=1)
+                                    # contact = self.env['res.partner'].get_contact_data_from_hubspot(hubspot_crm, contact_id)
                                 if company_id:
-                                    company = self.env['res.partner'].get_company_data_from_hubspot(hubspot_crm, company_id)
+                                    contact = self.env['res.partner'].search([('hubspot_contact_id', '=', response_data.get('id')),('is_company','=',True)], limit=1)
+                                    # company = self.env['res.partner'].get_company_data_from_hubspot(hubspot_crm, company_id)
                                 
 
                                 if not contact:
