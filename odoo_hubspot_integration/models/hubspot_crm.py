@@ -15,6 +15,7 @@ class hubspotCredentailDetails(models.Model):
     name = fields.Char("Nombre", required=True)
     hubspot_api_key = fields.Char("HubSpot API Key", required=True, help="Go in the hubspot back office and get Key.")
 
+
     company_sync = fields.Boolean(string="Sincronizar Compañias", default=True)
     company_import = fields.Boolean(string="Importar Compañias", default=True)
     company_export = fields.Boolean(string="Exportar Compañias", default=True)
