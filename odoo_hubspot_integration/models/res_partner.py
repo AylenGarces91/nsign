@@ -177,6 +177,8 @@ class ResPartner_HubSpot(models.Model):
                                     'zip': company.get('properties').get('zip',False),
                                     'is_company': True,
                                     'hubspot_contact_id': company.get('properties').get('hs_object_id'),
+                                    'hubspot_contact_imported': True,
+                                    'hubspot_crm_id': hubspot_crm.id,
                                     'hubspot_write_date': fecha_modificacion,
                                 })
                                 process_message = "Compañia Actualizada: {0}".format(company_info.name)
@@ -284,7 +286,7 @@ class ResPartner_HubSpot(models.Model):
                             })
                             process_message = "Contacto Creada: {0}".format(contact_company.name)
                         else:
-                            if fecha_modificacion > contact_info.write_date:
+                            if (company_info.hubspot_write_date and fecha_modificacion > company_info.hubspot_write_date) or (company_info.hubspot_write_date == False):
                                 # editamos el contacto
                                 contact_info.write({
                                     'name': name,
@@ -300,6 +302,8 @@ class ResPartner_HubSpot(models.Model):
                                     'user_id': user_id.id if user_id else False,
                                     'is_company': False,
                                     'hubspot_contact_id': contact.get('properties').get('hs_object_id'),
+                                    'hubspot_contact_imported': True,
+                                    'hubspot_crm_id': hubspot_crm.id,
                                     'hubspot_write_date': fecha_modificacion,
                                 })
                                 process_message = "Contacto Actualizada: {0}".format(contact_info.name)

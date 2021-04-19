@@ -176,7 +176,10 @@ class ProductTemplate_HubSpot(models.Model):
                                     'default_code': properties.get('hs_sku', False),
                                     'price':  properties.get('price') and float(properties.get('price',0)),
                                     'standard_price': properties.get('hs_cost_of_goods_sold') and float(properties.get('hs_cost_of_goods_sold',0)),
-                                    'hubspot_line_item_id': properties.get('hs_object_id', False),
+                                    'hubspot_line_item_id': False,
+                                    'hubspot_product_id': properties.get('hs_object_id'),
+                                    'hubspot_product_imported': True,
+                                    'hubspot_crm_id': hubspot_crm.id,
                                     'hubspot_write_date': fecha_modificacion,
                                 })
                                 process_message = "Producto Actualizado: {0}".format(product_template.name)
