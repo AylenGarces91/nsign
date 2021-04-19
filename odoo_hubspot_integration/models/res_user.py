@@ -13,8 +13,7 @@ class ResUser_HubSpot(models.Model):
     hubspot_crm_id = fields.Many2one('hubspot.crm', string="HubSpot Id")
 
 
-    def get_user_data_from_hubspot(self, hubspot_crm, hubspot_user_id):
-        hubspot_operation = hubspot_crm.create_hubspot_operation('contact_company','import',hubspot_crm,'Procesando...')
+    def get_user_data_from_hubspot(self, hubspot_crm, hubspot_user_id, hubspot_operation):
         self._cr.commit()
         try:
             querystring = { "idProperty":"id","archived":"false" }
@@ -33,7 +32,7 @@ class ResUser_HubSpot(models.Model):
                         'hubspot_user_imported': True,
                         'hubspot_crm_id': hubspot_crm.id
                     })
-                    process_message = "Usuario Creada: {0}".format(user.name)
+                    process_message = "Usuario Creado: {0}".format(user.name)
                 else:
                     fecha_modificacion = response_data.get('updatedAt')
                     fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
@@ -43,7 +42,7 @@ class ResUser_HubSpot(models.Model):
                             'login': response_data.get('email',False),
                             'hubspot_contact_id': response_data.get('id'),
                         })
-                        process_message = "Usuario Actualizada: {0}".format(user.name)
+                        process_message = "Usuario Actualizado: {0}".format(user.name)
                     else:
                         process_message = "Usuario no actualizado por fecha de modificación: {0}".format(user.name)
                     

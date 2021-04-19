@@ -20,24 +20,26 @@ class ProductTemplate_HubSpot(models.Model):
     def create(self, vals_list):
         data = super(ProductTemplate_HubSpot, self).create(vals_list)
         ################################################################
-        self._cr.commit()
-        try:
-            self.product_sincronize(data)
-        except Exception as e:
-            _logger.info("Error al importar en prestashop {}".format(e))
+        if self._context.get('omitir', False) == False:
+            self._cr.commit()
+            try:
+                self.product_sincronize(data)
+            except Exception as e:
+                _logger.info("Error al importar en prestashop {}".format(e))
         ################################################################
         return data
 
     def write(self, values):
         data = super(ProductTemplate_HubSpot, self).write(values)
         ################################################################
-        self._cr.commit()
-        try:
-            if data == True:
-                product = self.env['product.template'].search([('id','=',self.id)])
-                self.product_sincronize(product)
-        except Exception as e:
-            _logger.info("Error al exportar a hubspot {}".format(e))
+        if self._context.get('omitir', False) == False:
+            self._cr.commit()
+            try:
+                if data == True:
+                    product = self.env['product.template'].search([('id','=',self.id)])
+                    self.product_sincronize(product)
+            except Exception as e:
+                _logger.info("Error al exportar a hubspot {}".format(e))
         ################################################################
         return data
 
@@ -152,7 +154,7 @@ class ProductTemplate_HubSpot(models.Model):
 
                         if not product_template:
 
-                            product_template = self.env['product.template'].create({
+                            product_template = self.env['product.template'].with_context(omitir=True).create({
                                 'name': properties.get('name'),
                                 'description_sale': properties.get('description', False),
                                 'default_code': properties.get('hs_sku', False),
@@ -168,7 +170,7 @@ class ProductTemplate_HubSpot(models.Model):
                             process_message = "Producto Creado: {0}".format(product_template.name)
                         else:
                             if fecha_modificacion > product_template.write_date:
-                                product_template.write({
+                                product_template.with_context(omitir=True).write({
                                     'name': properties.get('name'),
                                     'description_sale': properties.get('description', False),
                                     'default_code': properties.get('hs_sku', False),
@@ -218,7 +220,7 @@ class ProductTemplate_HubSpot(models.Model):
                     response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("POST","objects/products", {}, payload)
                     
                     if response_status:
-                        product.write({
+                        product.with_context(omitir=True).write({
                             'hubspot_line_item_id': False,
                             'hubspot_product_id': response_data.get('properties').get('hs_object_id'),
                             'hubspot_crm_id': hubspot_crm.id

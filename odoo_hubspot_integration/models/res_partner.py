@@ -240,7 +240,7 @@ class ResPartner_HubSpot(models.Model):
 
                         user_id = contact.get('properties').get('hubspot_owner_id',False)
                         if user_id and user_id != '':
-                            user_id = self.env['res.users'].get_user_data_from_hubspot(hubspot_crm, user_id)
+                            user_id = self.env['res.users'].get_user_data_from_hubspot(hubspot_crm, user_id, hubspot_operation)
                         else:
                             user_id = False
 
