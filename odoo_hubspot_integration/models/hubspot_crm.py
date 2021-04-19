@@ -15,7 +15,6 @@ class hubspotCredentailDetails(models.Model):
     name = fields.Char("Nombre", required=True)
     hubspot_api_key = fields.Char("HubSpot API Key", required=True, help="Go in the hubspot back office and get Key.")
 
-
     company_sync = fields.Boolean(string="Sincronizar Compañias", default=True)
     company_import = fields.Boolean(string="Importar Compañias", default=True)
     company_export = fields.Boolean(string="Exportar Compañias", default=True)
@@ -174,13 +173,13 @@ class hubspotCredentailDetails(models.Model):
     def auto_sincronize_hubspot_odoo(self):
         if self.company_import:
             self.env['res.partner'].hubspot_to_odoo_import_companies(self)
-        if self.company_export:
-            self.env['res.partner'].hubspot_to_odoo_export_companies(self)
+        # if self.company_export:
+        #     self.env['res.partner'].hubspot_to_odoo_export_companies(self)
 
         if self.contact_import:
             self.env['res.partner'].hubspot_to_odoo_import_contacts(self)
-        if self.contact_export:
-            self.env['res.partner'].hubspot_to_odoo_export_contacts(self)
+        # if self.contact_export:
+        #     self.env['res.partner'].hubspot_to_odoo_export_contacts(self)
         
         if self.product_import:
             self.env['product.template'].hubsport_to_odoo_import_product_all(self)
