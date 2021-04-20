@@ -28,6 +28,7 @@ class ResUser_HubSpot(models.Model):
                     user = self.env['res.users'].create({
                         'name': response_data.get('firstName','') + " " + response_data.get('lastName',''),
                         'login': response_data.get('email',False),
+                        'sel_groups_1_8_9': '8',
                         'hubspot_user_id': response_data.get('id'),
                         'hubspot_user_imported': True,
                         'hubspot_crm_id': hubspot_crm.id
