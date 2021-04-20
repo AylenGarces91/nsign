@@ -20,7 +20,8 @@ class ProductTemplate_HubSpot(models.Model):
     def create(self, vals_list):
         data = super(ProductTemplate_HubSpot, self).create(vals_list)
         ################################################################
-        if self._context.get('omitir', False) == False:
+        hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
+        if self._context.get('omitir', False) == False and hubspot_crm.product_crud:
             self._cr.commit()
             try:
                 self.product_sincronize(data)
@@ -32,7 +33,8 @@ class ProductTemplate_HubSpot(models.Model):
     def write(self, values):
         data = super(ProductTemplate_HubSpot, self).write(values)
         ################################################################
-        if self._context.get('omitir', False) == False:
+        hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
+        if self._context.get('omitir', False) == False and hubspot_crm.product_crud:
             self._cr.commit()
             try:
                 if data == True:
@@ -169,7 +171,7 @@ class ProductTemplate_HubSpot(models.Model):
                             })
                             process_message = "Producto Creado: {0}".format(product_template.name)
                         else:
-                            if fecha_modificacion > product_template.write_date:
+                            if fecha_modificacion > product_template.write_date or product_template.hubspot_product_id == False:
                                 product_template.with_context(omitir=True).write({
                                     'name': properties.get('name'),
                                     'description_sale': properties.get('description', False),

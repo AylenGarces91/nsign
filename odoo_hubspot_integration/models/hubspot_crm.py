@@ -26,6 +26,7 @@ class hubspotCredentailDetails(models.Model):
     product_sync = fields.Boolean(string="Sincronizar Productos", default=True)
     product_import = fields.Boolean(string="Importar Productos", default=True)
     product_export = fields.Boolean(string="Exportar Productos", default=True)
+    product_crud =  fields.Boolean(string="Crear y Modificar productos inmediatamente", default=True)
 
     sale_sync = fields.Boolean(string="Sincronizar Ventas", default=True)
     sale_import = fields.Boolean(string="Importar Ventas", default=True)

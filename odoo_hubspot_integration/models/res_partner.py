@@ -265,7 +265,7 @@ class ResPartner_HubSpot(models.Model):
 
                         if not contact_info:
                             #creamos el contacto
-                            contact_company = self.env['res.partner'].create({
+                            contact_info = self.env['res.partner'].create({
                                 'name': name,
                                 'email': contact.get('properties').get('email',False),
                                 'phone': contact.get('properties').get('phone',False),
@@ -284,9 +284,9 @@ class ResPartner_HubSpot(models.Model):
                                 'hubspot_crm_id': hubspot_crm.id,
                                 'hubspot_write_date': fecha_modificacion,
                             })
-                            process_message = "Contacto Creada: {0}".format(contact_company.name)
+                            process_message = "Contacto Creada: {0}".format(contact_info.name)
                         else:
-                            if (company_info.hubspot_write_date and fecha_modificacion > company_info.hubspot_write_date) or (company_info.hubspot_write_date == False):
+                            if (contact_info.hubspot_write_date and fecha_modificacion > contact_info.hubspot_write_date) or (contact_info.hubspot_write_date == False):
                                 # editamos el contacto
                                 contact_info.write({
                                     'name': name,

@@ -73,6 +73,7 @@
                                         <separator string="Sincronizar Productos"/>
                                         <field name="product_import"/>
                                         <field name="product_export"/>
+                                        <field name="product_crud"/>
                                     </group>
                                 </group>
                                 <group>
