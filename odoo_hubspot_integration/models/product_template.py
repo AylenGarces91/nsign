@@ -55,7 +55,7 @@ class ProductTemplate_HubSpot(models.Model):
                             "hs_sku": product.default_code or "",
                             "description": product.description or "",
                             "hs_cost_of_goods_sold": product.standard_price or 0,
-                            "price": product.price or 0,
+                            "price": product.list_price or 0,
                         }
                     }
 
@@ -87,48 +87,6 @@ class ProductTemplate_HubSpot(models.Model):
         except Exception as e:
             _logger.info("Error al exportar hacia HubSpot  : %s" % (e))
 
-
-
-    def hubsport_to_odoo_import_product_single(self, hubspot_crm, hubspot_line_item_id):
-        
-        hubspot_operation = hubspot_crm.create_hubspot_operation('product','import',hubspot_crm,'Procesando...')
-        self._cr.commit()
-        try:
-            parameters = {"limit":"50","archived":"false","properties":"hs_object_id,hs_product_id,name,quantity,price"}
-            response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("objects/line_items/%s" % hubspot_line_item_id), parameters)
-            if response_status:
-                
-                product_product = self.env['product.template'].search([('hubspot_product_id', '=', response_data.get('properties').get('hs_product_id',False))], limit=1)
-                if not product_product:
-                    product_product = self.env['product.template'].search([('hubspot_line_item_id', '=', response_data.get('id'))], limit=1)
-
-                if not product_product:
-                    fecha_modificacion = response_data.get('properties').get('hs_lastmodifieddate')
-                    fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
-
-                    product_product = self.env['product.template'].create({
-                        'name': response_data.get('properties').get('name'),
-                        'type':'product',
-                        'hubspot_line_item_id': response_data.get('properties').get('hs_object_id', False),
-                        'hubspot_product_id': response_data.get('properties').get('hs_product_id', False),
-                        'hubspot_product_imported': True,
-                        'hubspot_crm_id': hubspot_crm.id,
-                        'hubspot_write_date': fecha_modificacion
-                    })
-                    process_message = "Producto Creado: {0}".format(product_product.name)
-                    hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
-                    self._cr.commit()
-            else:
-                process_message = "Error en la respuesta de importación de producto {}".format(response_data)
-                hubspot_crm.create_hubspot_operation_detail('product','import','',response_data,hubspot_operation,True,process_message)
-            
-        except Exception as e:
-            process_message="Error en la respuesta de importación de producto {}".format(e)
-            _logger.info(process_message)
-            hubspot_crm.create_hubspot_operation_detail('product','import',response_data,process_message,hubspot_operation,True,process_message)
-            hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
-        self._cr.commit()
-        return product_product
     
     
     def hubsport_to_odoo_import_product_all(self, hubspot_crm):
@@ -220,7 +178,7 @@ class ProductTemplate_HubSpot(models.Model):
                         "hs_sku": product.default_code or "",
                         "description": product.description or "",
                         "hs_cost_of_goods_sold": product.standard_price or 0,
-                        "price": product.price or 0,
+                        "price": product.list_price or 0,
                     }}
                     response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("POST","objects/products", {}, payload)
                     
@@ -244,3 +202,45 @@ class ProductTemplate_HubSpot(models.Model):
             hubspot_crm.create_hubspot_operation_detail('product','export',response_data,process_message,hubspot_operation,True,process_message)
             hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
         self._cr.commit()
+
+
+    def hubsport_to_odoo_import_product_single(self, hubspot_crm, hubspot_line_item_id):
+        
+        hubspot_operation = hubspot_crm.create_hubspot_operation('product','import',hubspot_crm,'Procesando...')
+        self._cr.commit()
+        try:
+            parameters = {"limit":"50","archived":"false","properties":"hs_object_id,hs_product_id,name,quantity,price"}
+            response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("objects/line_items/%s" % hubspot_line_item_id), parameters)
+            if response_status:
+                
+                product_product = self.env['product.template'].search([('hubspot_product_id', '=', response_data.get('properties').get('hs_product_id',False))], limit=1)
+                if not product_product:
+                    product_product = self.env['product.template'].search([('hubspot_line_item_id', '=', response_data.get('id'))], limit=1)
+
+                if not product_product:
+                    fecha_modificacion = response_data.get('properties').get('hs_lastmodifieddate')
+                    fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
+
+                    product_product = self.env['product.template'].create({
+                        'name': response_data.get('properties').get('name'),
+                        'type':'product',
+                        'hubspot_line_item_id': response_data.get('properties').get('hs_object_id', False),
+                        'hubspot_product_id': response_data.get('properties').get('hs_product_id', False),
+                        'hubspot_product_imported': True,
+                        'hubspot_crm_id': hubspot_crm.id,
+                        'hubspot_write_date': fecha_modificacion
+                    })
+                    process_message = "Producto Creado: {0}".format(product_product.name)
+                    hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
+                    self._cr.commit()
+            else:
+                process_message = "Error en la respuesta de importación de producto {}".format(response_data)
+                hubspot_crm.create_hubspot_operation_detail('product','import','',response_data,hubspot_operation,True,process_message)
+            
+        except Exception as e:
+            process_message="Error en la respuesta de importación de producto {}".format(e)
+            _logger.info(process_message)
+            hubspot_crm.create_hubspot_operation_detail('product','import',response_data,process_message,hubspot_operation,True,process_message)
+            hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
+        self._cr.commit()
+        return product_product

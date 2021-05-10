@@ -22,6 +22,7 @@ class hubspotCredentailDetails(models.Model):
     contact_sync = fields.Boolean(string="Sincronizar Contactos", default=True)
     contact_import = fields.Boolean(string="Importar Contactos", default=True)
     contact_export = fields.Boolean(string="Exportar Contactos", default=True)
+    contact_crud =  fields.Boolean(string="Crear y Modificar contactos inmediatamente", default=True)
 
     product_sync = fields.Boolean(string="Sincronizar Productos", default=True)
     product_import = fields.Boolean(string="Importar Productos", default=True)
@@ -31,6 +32,9 @@ class hubspotCredentailDetails(models.Model):
     sale_sync = fields.Boolean(string="Sincronizar Ventas", default=True)
     sale_import = fields.Boolean(string="Importar Ventas", default=True)
     sale_order_id_imported = fields.Char(string="Ultima Venta Importada")
+    sale_percent_complete = fields.Char(string="Nombre Etapa Invoiced 100%")
+    sale_percent_incomplete = fields.Char(string="Nombre Etapa Invoiced %")
+
 
     def create_hubspot_operation(self, operation, operation_type, hubspot_crm_id, log_message):
         vals = {
@@ -174,13 +178,13 @@ class hubspotCredentailDetails(models.Model):
     def auto_sincronize_hubspot_odoo(self):
         if self.company_import:
             self.env['res.partner'].hubspot_to_odoo_import_companies(self)
-        # if self.company_export:
-        #     self.env['res.partner'].hubspot_to_odoo_export_companies(self)
+        if self.company_export:
+            self.env['res.partner'].hubspot_to_odoo_export_companies(self)
 
         if self.contact_import:
             self.env['res.partner'].hubspot_to_odoo_import_contacts(self)
-        # if self.contact_export:
-        #     self.env['res.partner'].hubspot_to_odoo_export_contacts(self)
+        if self.contact_export:
+            self.env['res.partner'].hubspot_to_odoo_export_contacts(self)
         
         if self.product_import:
             self.env['product.template'].hubsport_to_odoo_import_product_all(self)
