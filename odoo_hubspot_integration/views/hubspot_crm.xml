@@ -21,6 +21,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="auto_sincronize_hubspot_odoo" class="oe_stat_button" icon="fa-cart-plus" string="Ordenes"/>
+                            <button type="object" name="sincronize_product_hubspot_odoo" class="oe_stat_button" icon="fa-cart-plus" string="Producto dia 1"/>
                         </div>
                         <group>
                             <group>

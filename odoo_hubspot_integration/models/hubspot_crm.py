@@ -186,10 +186,16 @@ class hubspotCredentailDetails(models.Model):
         if self.contact_export:
             self.env['res.partner'].hubspot_to_odoo_export_contacts(self)
         
+        # if self.product_import:
+        #     self.env['product.template'].hubsport_to_odoo_import_product_all(self)
+        # if self.product_export:
+        #     self.env['product.template'].hubsport_to_odoo_export_product_all(self)
+        
+        if self.sale_import:
+            self.env['sale.order'].hubspot_to_odoo_import_orders(self)
+
+    def sincronize_product_hubspot_odoo(self):
         if self.product_import:
             self.env['product.template'].hubsport_to_odoo_import_product_all(self)
         if self.product_export:
             self.env['product.template'].hubsport_to_odoo_export_product_all(self)
-        
-        if self.sale_import:
-            self.env['sale.order'].hubspot_to_odoo_import_orders(self)
