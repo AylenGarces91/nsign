@@ -53,7 +53,7 @@ class ProductTemplate_HubSpot(models.Model):
             payload = { "properties": {
                             "name": product.name,
                             "hs_sku": product.default_code or "",
-                            "description": product.description or "",
+                            "description": product.description_sale or "",
                             "hs_cost_of_goods_sold": product.standard_price or 0,
                             "price": product.list_price or 0,
                         }
