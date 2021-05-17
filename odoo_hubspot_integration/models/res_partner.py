@@ -162,11 +162,11 @@ class ResPartner_HubSpot(models.Model):
                         if not company_info:
                             company_info = self.env['res.partner'].search([('is_company','=',True),('name','=',company.get('properties').get('name'))], limit=1)
 
-                        country = company.get('properties').get('country',False) if company.get('properties').get('country') is not None else False
-                        country_id = self.env['res.country'].search([('name', 'like', country[0])], limit=1) if country else False
+                        # country = company.get('properties').get('country',False) if company.get('properties').get('country') is not None else False
+                        # country_id = self.env['res.country'].search([('name', 'like', country[0])], limit=1) if country else False
                         
-                        state = company.get('properties').get('state',False) if company.get('properties').get('state') is not None else False
-                        state_id = self.env['res.country.state'].search([('code', 'like', state[0])], limit=1) if state else False
+                        # state = company.get('properties').get('state',False) if company.get('properties').get('state') is not None else False
+                        # state_id = self.env['res.country.state'].search([('code', 'like', state[0])], limit=1) if state else False
 
                         fecha_modificacion = company.get('properties').get('hs_lastmodifieddate')
                         fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
@@ -179,8 +179,8 @@ class ResPartner_HubSpot(models.Model):
                                 'website': company.get('properties').get('website',False),
                                 'street': company.get('properties').get('address',False),
                                 'city': company.get('properties').get('city',False),
-                                'country_id': country_id.id if country_id else False,
-                                'state_id': state_id.id if state_id else False,
+                                # 'country_id': country_id.id if country_id else False,
+                                # 'state_id': state_id.id if state_id else False,
                                 'zip': company.get('properties').get('zip',False),
                                 'is_company': True,
                                 'hubspot_contact_id': company.get('properties').get('hs_object_id'),
@@ -198,8 +198,8 @@ class ResPartner_HubSpot(models.Model):
                                     'website': company.get('properties').get('website',False),
                                     'street': company.get('properties').get('address',False),
                                     'city': company.get('properties').get('city',False),
-                                    'country_id': country_id.id if country_id else False,
-                                    'state_id': state_id.id if state_id else False,
+                                    #'country_id': country_id.id if country_id else False,
+                                    #'state_id': state_id.id if state_id else False,
                                     'zip': company.get('properties').get('zip',False),
                                     'is_company': True,
                                     'hubspot_contact_id': company.get('properties').get('hs_object_id'),
@@ -303,11 +303,11 @@ class ResPartner_HubSpot(models.Model):
                         if not contact_info:
                             contact_info = self.env['res.partner'].search([('is_company','=',False),('email','=',contact.get('properties').get('email'))], limit=1)
 
-                        country = contact.get('properties').get('country',False) if contact.get('properties').get('country') is not None else False
-                        country_id = self.env['res.country'].search([('name', 'like', country[0])], limit=1) if country else False
+                        # country = contact.get('properties').get('country',False) if contact.get('properties').get('country') is not None else False
+                        # country_id = self.env['res.country'].search([('name', 'like', country[0])], limit=1) if country else False
 
-                        state = contact.get('properties').get('state',False) if contact.get('properties').get('state') is not None else False
-                        state_id = self.env['res.country.state'].search([('code', 'like', state[0])], limit=1) if state else False
+                        # state = contact.get('properties').get('state',False) if contact.get('properties').get('state') is not None else False
+                        # state_id = self.env['res.country.state'].search([('code', 'like', state[0])], limit=1) if state else False
 
                         user_id = contact.get('properties').get('hubspot_owner_id',False)
                         if user_id and user_id != '':
@@ -342,8 +342,8 @@ class ResPartner_HubSpot(models.Model):
                                 'website': contact.get('properties').get('website',False),
                                 'street': contact.get('properties').get('address',False),
                                 'city': contact.get('properties').get('city',False),
-                                'country_id': country_id.id if country_id else False,
-                                'state_id': state_id.id if state_id else False,
+                                # 'country_id': country_id.id if country_id else False,
+                                # 'state_id': state_id.id if state_id else False,
                                 'zip': contact.get('properties').get('zip',False),
                                 'user_id': user_id.id if user_id else False,
                                 'parent_id': company_id,
@@ -365,8 +365,8 @@ class ResPartner_HubSpot(models.Model):
                                     'website': contact.get('properties').get('website',False),
                                     'street': contact.get('properties').get('address',False),
                                     'city': contact.get('properties').get('city',False),
-                                    'country_id': country_id.id if country_id else False,
-                                    'state_id': state_id.id if state_id else False,
+                                    # 'country_id': country_id.id if country_id else False,
+                                    # 'state_id': state_id.id if state_id else False,
                                     'zip': contact.get('properties').get('zip',False),
                                     'user_id': user_id.id if user_id else False,
                                     'is_company': False,

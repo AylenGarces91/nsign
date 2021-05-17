@@ -1,3 +1,4 @@
+from . import account_move
 from . import hubspot_crm
 from . import hubspot_operation
 from . import res_partner
