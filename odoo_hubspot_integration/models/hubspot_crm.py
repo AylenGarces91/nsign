@@ -1,7 +1,7 @@
-import base64
 import datetime
 import json
 import logging
+import time
 from odoo import models, fields, api, _
 from requests import request
 
@@ -178,14 +178,16 @@ class hubspotCredentailDetails(models.Model):
     def auto_sincronize_hubspot_odoo(self):
         if self.company_import:
             self.env['res.partner'].hubspot_to_odoo_import_companies(self)
+        time.sleep(5)
         if self.company_export:
             self.env['res.partner'].hubspot_to_odoo_export_companies(self)
-
+        time.sleep(5)
         if self.contact_import:
             self.env['res.partner'].hubspot_to_odoo_import_contacts(self)
+        time.sleep(5)
         if self.contact_export:
             self.env['res.partner'].hubspot_to_odoo_export_contacts(self)
-        
+        time.sleep(5)
         # if self.product_import:
         #     self.env['product.template'].hubsport_to_odoo_import_product_all(self)
         # if self.product_export:
@@ -197,5 +199,6 @@ class hubspotCredentailDetails(models.Model):
     def sincronize_product_hubspot_odoo(self):
         if self.product_import:
             self.env['product.template'].hubsport_to_odoo_import_product_all(self)
+        time.sleep(5)
         if self.product_export:
             self.env['product.template'].hubsport_to_odoo_export_product_all(self)
