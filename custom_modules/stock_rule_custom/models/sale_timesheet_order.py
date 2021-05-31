@@ -9,6 +9,21 @@ from odoo.tools.safe_eval import safe_eval
 
 class sale_timesheet_order_custom(models.Model):
 
+    _inherit = 'sale.order'
+
+    project_count = fields.Integer(string='Proyectos', compute='_get_proyect_count', readonly=True)
+
+    @api.depends('order_line.product_id', 'order_line.project_id')
+    def _get_proyect_count(self):
+        for order in self:
+            projects = order.order_line.mapped('product_id.project_id')
+            projects |= order.order_line.mapped('project_id')
+            projects |= order.project_id
+            order.project_count = len(projects)
+
+    
+class sale_timesheet_order_line_custom(models.Model):
+
     _inherit = 'sale.order.line'
 
     def _timesheet_service_generation(self):

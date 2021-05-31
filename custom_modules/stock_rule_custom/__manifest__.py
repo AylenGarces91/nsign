@@ -11,6 +11,7 @@
         """,
     'depends': ['purchase_stock','sale_timesheet'],
     'data': [
+        'views/sale_order_views.xml',
     ],
     'demo': [],
     'installable': True,
