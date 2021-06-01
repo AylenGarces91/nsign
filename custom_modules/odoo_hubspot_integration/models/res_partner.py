@@ -389,13 +389,13 @@ class ResPartner_HubSpot(models.Model):
                         after = response_data.get('paging').get('next').get('after')
                         time.sleep(5)
                     else:
+                        hubspot_operation.write({'hubspot_message': "¡El proceso de exportar compañia se completó con éxito!"})
                         break
 
                 else:
                     process_message = "Error en la respuesta de importación de Contacto {}".format(response_data)
                     hubspot_crm.create_hubspot_operation_detail('contact','import','',response_data,hubspot_operation,True,process_message)
                     break
-            hubspot_operation.write({'hubspot_message': "¡El proceso de exportar compañia se completó con éxito!"})
         except Exception as e:
             process_message="Error en la respuesta de importación de contacto {}".format(e)
             _logger.info(process_message)
