@@ -11,13 +11,9 @@ class hubspotOperation(models.Model):
     hubspot_operation = fields.Selection([
         ('account', 'Account'),
         ('product', 'Product'),
-        ('customer', 'Customer'),
-        ('contact_company', 'Customer Company'),
-        ('product_attribute', 'Product Attribute'),
-        ('product_variant', 'Product Variant'),
+        ('contact', 'Contact'),
+        ('contact_company', 'Contact Company'),
         ('order', 'Order'),
-        ('product_category', 'Product Category'),
-        ('stock', 'Stock'),
         ('user', 'User'),
         ], string="Operación")
     hubspot_operation_type = fields.Selection([
@@ -49,14 +45,10 @@ class hubspotOperationDetail(models.Model):
     operation_id = fields.Many2one("hubspot.operation", string="Operación HubSpot")
     hubspot_operation = fields.Selection([
         ('account', 'Account'),
-        ('product', 'Product'),
-        ('customer', 'Customer'),
-        ('contact_company', 'Customer Company'),
-        ('product_attribute', 'Product Attribute'),
-        ('product_variant', 'Product Variant'),
+        ('product', 'Product'),#
+        ('contact', 'Contact'),#
+        ('contact_company', 'Contact Company'),#
         ('order', 'Order'),
-        ('product_category', 'Product Category'),
-        ('stock', 'Stock'),
         ('user', 'User')
         ], string="Operación")
     hubspot_operation_type = fields.Selection([

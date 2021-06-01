@@ -1,4 +1,5 @@
 import logging
+import time
 
 from odoo import fields, models, api
 from datetime import datetime
@@ -21,7 +22,7 @@ class ProductTemplate_HubSpot(models.Model):
         data = super(ProductTemplate_HubSpot, self).create(vals_list)
         ################################################################
         hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
-        if self._context.get('omitir', False) == False and hubspot_crm.product_crud:
+        if hubspot_crm.product_crud:
             self._cr.commit()
             try:
                 self.product_sincronize(data)
@@ -34,7 +35,7 @@ class ProductTemplate_HubSpot(models.Model):
         data = super(ProductTemplate_HubSpot, self).write(values)
         ################################################################
         hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
-        if self._context.get('omitir', False) == False and hubspot_crm.product_crud:
+        if hubspot_crm.product_crud:
             self._cr.commit()
             try:
                 if data == True:
@@ -77,15 +78,21 @@ class ProductTemplate_HubSpot(models.Model):
                 res = super(ProductTemplate_HubSpot, product).write(data)
                 
                 process_message = "Producto creado/actualizado en hubspot: {}".format(product.name)
+                hubspot_crm.create_hubspot_operation_detail('product', 'export', False, response_data, hubspot_operation, False, process_message)
+                hubspot_operation.write({'hubspot_message': "El proceso de exportación se realizo correctamente"})
             else:
                 process_message="Error en la exportación del producto {}".format(product.name)
                 hubspot_crm.create_hubspot_operation_detail('product','export',response_data,process_message,hubspot_operation,True,process_message)
                 hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (process_message)})
             
-            hubspot_crm.create_hubspot_operation_detail('customer', 'export', False, response_data, hubspot_operation, False, process_message)
+            hubspot_operation.write({'hubspot_message': "El proceso de exportación se realizo correctamente"})
             self._cr.commit()
         except Exception as e:
-            _logger.info("Error al exportar hacia HubSpot  : %s" % (e))
+            process_message="Error en la respuesta de importación de producto {}".format(e)
+            _logger.info(process_message)
+            hubspot_crm.create_hubspot_operation_detail('product','import',response_data,process_message,hubspot_operation,True,process_message)
+            hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
+        self._cr.commit()
 
     
     
@@ -152,6 +159,7 @@ class ProductTemplate_HubSpot(models.Model):
                     
                     if response_data.get('paging', False) and response_data.get('paging').get('next',False) and response_data.get('paging').get('next').get('after',False):
                         after = response_data.get('paging').get('next').get('after')
+                        time.sleep(5)
                     else:
                         break
                 else:

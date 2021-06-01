@@ -71,6 +71,7 @@ class SaleOrder_HubSpot(models.Model):
                                     continue
 
                                 order_id = self.create_sales_order_from_hubspot(contact, date_add, order.get('id'), hubspot_crm)
+                                order_id.onchange_partner_id()
                                 order_message = "{} : Venta Creada".format(order_id.name)
                                 hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
                                 
@@ -100,9 +101,9 @@ class SaleOrder_HubSpot(models.Model):
                     if order_response_data.get('paging', False) and order_response_data.get('paging').get('next',False) and order_response_data.get('paging').get('next').get('after',False):
                         after = order_response_data.get('paging').get('next').get('after')
                     else:
+                        hubspot_operation and hubspot_operation.write({'hubspot_message': "¡El proceso se completó con éxito!"})
                         break
-
-                    hubspot_operation and hubspot_operation.write({'hubspot_message': "¡El proceso se completó con éxito!"})
+            
         except Exception as e:
             process_message = "Getting an Error In Import Order Response {}".format(e)
             _logger.info(process_message)

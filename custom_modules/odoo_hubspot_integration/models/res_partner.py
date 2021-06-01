@@ -1,8 +1,8 @@
 from odoo import fields, models, api
 import logging
+import time
 
 _logger = logging.getLogger(__name__)
-
 
 class ResPartner_HubSpot(models.Model):
 
@@ -79,12 +79,13 @@ class ResPartner_HubSpot(models.Model):
                         'hubspot_write_date': fecha_modificacion,
                     })
                     process_message = "Compañia creado en hubspot: {}".format(contact.name)
+                    hubspot_crm.create_hubspot_operation_detail('contact_company', 'export', True, response_data, hubspot_operation, False, process_message)
                 else:
                     process_message = "Error en la exportación de la compañia {}".format(contact.name)
-                    hubspot_crm.create_hubspot_operation_detail('customer','export',response_data,process_message,hubspot_operation,True,process_message)
+                    hubspot_crm.create_hubspot_operation_detail('contact_company','export',response_data,process_message,hubspot_operation,True,process_message)
                     hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (process_message)})
             else:
-                hubspot_operation = hubspot_crm.create_hubspot_operation('customer','export',hubspot_crm,'Procesando...')
+                hubspot_operation = hubspot_crm.create_hubspot_operation('contact','export',hubspot_crm,'Procesando...')
                 payload = {
                     "properties":{
                         "firstname": contact.name,
@@ -117,14 +118,14 @@ class ResPartner_HubSpot(models.Model):
                         'hubspot_write_date': fecha_modificacion,
                     })
                     process_message = "Contacto creado en hubspot: {}".format(contact.name)
+                    hubspot_crm.create_hubspot_operation_detail('contact', 'export', True, response_data, hubspot_operation, False, process_message)
                 else:
                     process_message = "Error en la exportación del contacto {}".format(contact.name)
-                    hubspot_crm.create_hubspot_operation_detail('customer','export',response_data,process_message,hubspot_operation,True,process_message)
+                    hubspot_crm.create_hubspot_operation_detail('contact','export',response_data,process_message,hubspot_operation,True,process_message)
                     hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (process_message)})
 
 
-            process_message = "El proceso de exportacion se realizo correctamente"
-            hubspot_crm.create_hubspot_operation_detail('contact_company', 'export', True, '', hubspot_operation, False, process_message)
+            hubspot_operation.write({'hubspot_message': "El proceso de exportación se realizo correctamente"})
             self._cr.commit()
         except Exception as e:
             process_message="Error en la respuesta de importación de contacto {}".format(e)
@@ -216,11 +217,12 @@ class ResPartner_HubSpot(models.Model):
 
                     if response_data.get('paging', False) and response_data.get('paging').get('next',False) and response_data.get('paging').get('next').get('after',False):
                         after = response_data.get('paging').get('next').get('after')
+                        time.sleep(5)
                     else:
                         break
                 else:
                     process_message = "Error en la respuesta de importación de Empresas {}".format(response_data)
-                    hubspot_crm.create_hubspot_operation_detail('customer','import','',response_data,hubspot_operation,True,process_message)
+                    hubspot_crm.create_hubspot_operation_detail('contact_company','import','',response_data,hubspot_operation,True,process_message)
                     break
 
             hubspot_operation.write({'hubspot_message': "¡El proceso de importar compañia se completó con éxito!"})
@@ -249,7 +251,6 @@ class ResPartner_HubSpot(models.Model):
                     }
                     response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("POST","objects/companies",{}, payload)
                     if response_status:
-                        
                         fecha_modificacion = response_data.get('properties').get('hs_lastmodifieddate')
                         fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
                         super(ResPartner_HubSpot, company).write({
@@ -258,13 +259,14 @@ class ResPartner_HubSpot(models.Model):
                            'hubspot_write_date': fecha_modificacion,
                         })
                         process_message = "Compañia creado en hubspot: {}".format(company.company_id.name)
+                        hubspot_crm.create_hubspot_operation_detail('contact_company', 'export', True, '', hubspot_operation, False, process_message)
                     else:
                         process_message = "Error en la exportación del contacto {}".format(company.company_id.name)
-                        hubspot_crm.create_hubspot_operation_detail('customer','export',response_data,process_message,hubspot_operation,True,process_message)
-                        hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (process_message)})
-            process_message = "El proceso de exportacion se realizo correctamente"
-            hubspot_crm.create_hubspot_operation_detail('contact_company', 'export', True, '', hubspot_operation, False, process_message)
-            self._cr.commit()
+                        hubspot_crm.create_hubspot_operation_detail('contact_company','export',response_data,process_message,hubspot_operation,True,process_message)
+                    self._cr.commit()
+                    time.sleep(1)
+
+            hubspot_operation.write({'hubspot_message': "¡El proceso de exportar compañia se completó con éxito!"})
         except Exception as e:
             process_message="Error en la respuesta de importación de contacto {}".format(e)
             _logger.info(process_message)
@@ -275,7 +277,7 @@ class ResPartner_HubSpot(models.Model):
 
 
     def hubspot_to_odoo_import_contacts(self, hubspot_crm = False):
-        hubspot_operation = hubspot_crm.create_hubspot_operation('customer','import',hubspot_crm,'Procesando...')
+        hubspot_operation = hubspot_crm.create_hubspot_operation('contact','import',hubspot_crm,'Procesando...')
         self._cr.commit()
         try:
             after = 0
@@ -329,9 +331,10 @@ class ResPartner_HubSpot(models.Model):
                             except Exception as e:
                                 pass
                         
-                        name = contact.get('properties').get('firstname','') if contact.get('properties').get('firstname','') is not None else ''
-                        name = name + ' ' + contact.get('properties').get('lastname','') if contact.get('properties').get('lastname','') is not None else ''
-
+                        first_name = contact.get('properties').get('firstname','') if contact.get('properties').get('firstname','') is not None else ''
+                        last_name = contact.get('properties').get('lastname','') if contact.get('properties').get('lastname','') is not None else ''
+                        name = first_name + ' ' + last_name
+                        
                         if not contact_info:
                             #creamos el contacto
                             contact_info = super(ResPartner_HubSpot, self).create({
@@ -375,32 +378,33 @@ class ResPartner_HubSpot(models.Model):
                                     'hubspot_crm_id': hubspot_crm.id,
                                     'hubspot_write_date': fecha_modificacion,
                                 })
-                                process_message = "Contacto Actualizada: {0}".format(contact_info.name)
+                                process_message = "Contacto actualizado: {0}".format(contact_info.name)
                             else:
                                 process_message = "Contacto no actualizado por fecha de modificación: {0}".format(contact_info.name)
 
-                        hubspot_crm.create_hubspot_operation_detail('customer', 'import', False, response_data, hubspot_operation, False, process_message)
+                        hubspot_crm.create_hubspot_operation_detail('contact', 'import', False, response_data, hubspot_operation, False, process_message)
                         self._cr.commit()
 
                     if response_data.get('paging', False) and response_data.get('paging').get('next',False) and response_data.get('paging').get('next').get('after',False):
                         after = response_data.get('paging').get('next').get('after')
+                        time.sleep(5)
                     else:
                         break
 
                 else:
                     process_message = "Error en la respuesta de importación de Contacto {}".format(response_data)
-                    hubspot_crm.create_hubspot_operation_detail('customer','import','',response_data,hubspot_operation,True,process_message)
+                    hubspot_crm.create_hubspot_operation_detail('contact','import','',response_data,hubspot_operation,True,process_message)
                     break
-
+            hubspot_operation.write({'hubspot_message': "¡El proceso de exportar compañia se completó con éxito!"})
         except Exception as e:
             process_message="Error en la respuesta de importación de contacto {}".format(e)
             _logger.info(process_message)
-            hubspot_crm.create_hubspot_operation_detail('customer','import',response_data,process_message,hubspot_operation,True,process_message)
+            hubspot_crm.create_hubspot_operation_detail('contact','import',response_data,process_message,hubspot_operation,True,process_message)
             hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
         self._cr.commit()
     
     def hubspot_to_odoo_export_contacts(self, hubspot_crm):
-        hubspot_operation = hubspot_crm.create_hubspot_operation('customer','export',hubspot_crm,'Procesando...')
+        hubspot_operation = hubspot_crm.create_hubspot_operation('contact','export',hubspot_crm,'Procesando...')
         self._cr.commit()
         try:
             contacts = self.env['res.partner'].search([('hubspot_contact_id','=',False),('active','=',True),('is_company','=',False)])
@@ -427,16 +431,18 @@ class ResPartner_HubSpot(models.Model):
                             'hubspot_write_date': fecha_modificacion,
                         })
                         process_message = "Contacto creado en hubspot: {}".format(contact.name)
+                        hubspot_crm.create_hubspot_operation_detail('contact', 'export', True, '', hubspot_operation, False, process_message)
                     else:
                         process_message="Error en la exportación del contacto {}".format(contact.name)
-                        hubspot_crm.create_hubspot_operation_detail('customer','export',response_data,process_message,hubspot_operation,True,process_message)
-                        hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (process_message)})
-                hubspot_crm.create_hubspot_operation_detail('customer', 'export', False, response_data, hubspot_operation, False, process_message)
+                        hubspot_crm.create_hubspot_operation_detail('contact','export',response_data,process_message,hubspot_operation,True,process_message)
+                    time.sleep(1)
+
+                hubspot_operation.write({'hubspot_message': "¡El proceso de exportar compañia se completó con éxito!"})
                 self._cr.commit()
         except Exception as e:
             process_message="Error en la respuesta de importación de contacto {}".format(e)
             _logger.info(process_message)
-            hubspot_crm.create_hubspot_operation_detail('customer','import',response_data,process_message,hubspot_operation,True,process_message)
+            hubspot_crm.create_hubspot_operation_detail('contact','import',response_data,process_message,hubspot_operation,True,process_message)
             hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
         self._cr.commit()
 
