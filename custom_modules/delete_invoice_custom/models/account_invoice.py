@@ -7,6 +7,6 @@ class AccountInvoice(models.Model):
     
     def unlink(self):
         for record in self:
-            if move.state == 'draft':
-                move.name = '/'
+            if record.state == 'draft':
+                record.name = '/'
             return super(AccountInvoice, record).unlink()
