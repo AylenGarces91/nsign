@@ -6,7 +6,6 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessE
 
 _logger = logging.getLogger("hubspot")
 
-
 class AccountMove_HubSpot(models.Model):
     
     _inherit = "account.move"
