@@ -11,9 +11,9 @@
                     <page string="HubSpot">
                         <group>
                             <group>
-                                <field name="hubspot_line_item_id" readonly="1" />
+                                <field name="hubspot_lineitem_id" readonly="1" />
                                 <field name="hubspot_product_id" readonly="1" />
-                                <field name="hubspot_product_imported" readonly="1" />
+                                <field name="hubspot_product_synchronized" readonly="1" />
                             </group>
                         </group>
                     </page>

@@ -15,19 +15,12 @@ class hubspotCredentailDetails(models.Model):
     name = fields.Char("Nombre", required=True)
     hubspot_api_key = fields.Char("HubSpot API Key", required=True, help="Go in the hubspot back office and get Key.")
 
-    company_sync = fields.Boolean(string="Sincronizar Compañias", default=True)
-    company_import = fields.Boolean(string="Importar Compañias", default=True)
-    company_export = fields.Boolean(string="Exportar Compañias", default=True)
-
-    contact_sync = fields.Boolean(string="Sincronizar Contactos", default=True)
-    contact_import = fields.Boolean(string="Importar Contactos", default=True)
-    contact_export = fields.Boolean(string="Exportar Contactos", default=True)
-    contact_crud =  fields.Boolean(string="Crear y Modificar contactos inmediatamente", default=True)
+    contact_crud =  fields.Boolean(string="Crear y Modificar inmediatamente", default=True)
 
     product_sync = fields.Boolean(string="Sincronizar Productos", default=True)
     product_import = fields.Boolean(string="Importar Productos", default=True)
     product_export = fields.Boolean(string="Exportar Productos", default=True)
-    product_crud =  fields.Boolean(string="Crear y Modificar productos inmediatamente", default=True)
+    product_crud =  fields.Boolean(string="Crear y Modificar inmediatamente", default=True)
 
     sale_sync = fields.Boolean(string="Sincronizar Ventas", default=True)
     sale_import = fields.Boolean(string="Importar Ventas", default=True)
@@ -82,56 +75,6 @@ class hubspotCredentailDetails(models.Model):
             _logger.info("hubspot API Response Data : %s" % (e))
             return False, e
 
-
-
-    def action_company_import(self):
-        company_obj = self.env['res.partner']
-        company_obj.hubspot_to_odoo_import_companies(self)
-        return {
-            'effect': {
-                'fadeout': 'slow',
-                'message': 'Empresas importadas exitosamente',
-                'img_url': '/web/static/src/img/smile.svg',
-                'type': 'rainbow_man',
-            }
-        }
-
-    def action_company_export(self):
-        company_obj = self.env['res.partner']
-        company_obj.hubspot_to_odoo_export_companies(self)
-        return {
-            'effect': {
-                'fadeout': 'slow',
-                'message': 'Contactos exportados exitosamente',
-                'img_url': '/web/static/src/img/smile.svg',
-                'type': 'rainbow_man',
-            }
-        }
-
-    def action_contact_import(self):
-        contact_obj = self.env['res.partner']
-        contact_obj.hubspot_to_odoo_import_contacts(self)
-        return {
-            'effect': {
-                'fadeout': 'slow',
-                'message': 'Contactos importados exitosamente',
-                'img_url': '/web/static/src/img/smile.svg',
-                'type': 'rainbow_man',
-            }
-        }
-
-    def action_contact_export(self):
-        contact_obj = self.env['res.partner']
-        contact_obj.hubspot_to_odoo_export_contacts(self)
-        return {
-            'effect': {
-                'fadeout': 'slow',
-                'message': 'Contactos exportados exitosamente',
-                'img_url': '/web/static/src/img/smile.svg',
-                'type': 'rainbow_man',
-            }
-        }
-
     def action_product_import(self):
         Producto_obj = self.env['product.template']
         Producto_obj.hubsport_to_odoo_import_product_all(self)
@@ -182,18 +125,6 @@ class hubspotCredentailDetails(models.Model):
 
 
     def auto_sincronize_hubspot_odoo(self):
-        if self.company_import:
-            self.env['res.partner'].hubspot_to_odoo_import_companies(self)
-        time.sleep(5)
-        if self.company_export:
-            self.env['res.partner'].hubspot_to_odoo_export_companies(self)
-        time.sleep(5)
-        if self.contact_import:
-            self.env['res.partner'].hubspot_to_odoo_import_contacts(self)
-        time.sleep(5)
-        if self.contact_export:
-            self.env['res.partner'].hubspot_to_odoo_export_contacts(self)
-        time.sleep(5)
         if self.sale_import:
             self.env['sale.order'].hubspot_to_odoo_import_orders(self)
 

@@ -1,18 +1,15 @@
 from odoo import fields, models, api
-from datetime import datetime, timedelta
 import logging
-import json
 
-_logger = logging.getLogger("hubspot")
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrder_HubSpot(models.Model):
     
     _inherit = "sale.order"
 
-    hubspot_order_id = fields.Char("HubSpot Id", copy=False)
-    hubspot_order_imported = fields.Boolean(default=False, string="HubSpot es Importado", copy=False)
-    hubspot_crm_id = fields.Many2one('hubspot.crm', string="HubSpot Id")
+    hubspot_order_id = fields.Char("HubSpot Id")
+    hubspot_order_imported = fields.Boolean(default=False, string="HubSpot es Importado")
 
     def hubspot_to_odoo_import_orders(self, hubspot_crm=False):
         
@@ -55,15 +52,10 @@ class SaleOrder_HubSpot(models.Model):
                             deal_response_status, deal_resp_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET", ("objects/deals/%s" % (order.get('id'))), params, {})
                             if(deal_response_status and deal_resp_data):
                                 res_data_asociate = deal_resp_data.get("associations")
-                                contact = company = False
+                                contact = False
 
                                 if res_data_asociate.get("contacts", False) and res_data_asociate.get("contacts").get("results"):
-                                    contact_id = res_data_asociate.get("contacts").get("results")[0].get("id")
-                                    contact = self.env['res.partner'].search([('hubspot_contact_id', '=', contact_id),('is_company','=',False)], limit=1)
-
-                                if res_data_asociate.get("companies", False) and res_data_asociate.get("companies").get("results"):
-                                    company_id = res_data_asociate.get("companies").get("results")[0].get("id")
-                                    contact = self.env['res.partner'].search([('hubspot_contact_id', '=', company_id),('is_company','=',True)], limit=1)
+                                    contact = self.env['res.partner'].get_contact_data_from_hubspot(hubspot_crm, res_data_asociate.get("contacts").get("results")[0].get("id"))
 
                                 if not contact:
                                     order_message = "El negocio no tiene un cliente asociado"
@@ -120,7 +112,6 @@ class SaleOrder_HubSpot(models.Model):
             'date_order': date_add,
             'hubspot_order_id': sale_id,
             'hubspot_order_imported': True,
-            'hubspot_crm_id': hubspot_crm.id
         }
         return super(SaleOrder_HubSpot, self.env['sale.order']).create(vals)
 
