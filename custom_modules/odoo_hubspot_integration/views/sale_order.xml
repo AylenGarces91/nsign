@@ -16,5 +16,17 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_quotation_tree_hubspot_custom" model="ir.ui.view">
+            <field name="name">view_quotation_tree_hubspot_custom</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="hubspot_order_id" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>

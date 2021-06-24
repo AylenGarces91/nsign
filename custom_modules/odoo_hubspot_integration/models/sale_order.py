@@ -8,7 +8,7 @@ class SaleOrder_HubSpot(models.Model):
     
     _inherit = "sale.order"
 
-    hubspot_order_id = fields.Char("HubSpot Id")
+    hubspot_order_id = fields.Char("Id HubSpot")
     hubspot_order_imported = fields.Boolean(default=False, string="HubSpot es Importado")
 
     def hubspot_to_odoo_import_orders(self, hubspot_crm=False):
@@ -52,17 +52,22 @@ class SaleOrder_HubSpot(models.Model):
                             deal_response_status, deal_resp_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET", ("objects/deals/%s" % (order.get('id'))), params, {})
                             if(deal_response_status and deal_resp_data):
                                 res_data_asociate = deal_resp_data.get("associations")
-                                contact = False
+                                company = contact = False
+
+                                if res_data_asociate.get("companies", False) and res_data_asociate.get("companies").get("results"):
+                                    company = self.env['res.partner'].get_company_data_from_hubspot(hubspot_operation, hubspot_crm, res_data_asociate.get("companies").get("results")[0].get("id"))
 
                                 if res_data_asociate.get("contacts", False) and res_data_asociate.get("contacts").get("results"):
-                                    contact = self.env['res.partner'].get_contact_data_from_hubspot(hubspot_crm, res_data_asociate.get("contacts").get("results")[0].get("id"))
+                                    contact = self.env['res.partner'].get_contact_data_from_hubspot(hubspot_operation, hubspot_crm, res_data_asociate.get("contacts").get("results")[0].get("id"))
 
-                                if not contact:
+                                if not company and not contact:
                                     order_message = "El negocio no tiene un cliente asociado"
                                     hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
                                     continue
-
-                                order_id = self.create_sales_order_from_hubspot(contact, date_add, order.get('id'), hubspot_crm)
+                                
+                                order_contact = contact if contact else company
+                                
+                                order_id = self.create_sales_order_from_hubspot(order_contact, date_add, order.get('id'), hubspot_crm)
                                 order_id.onchange_partner_id()
                                 order_message = "{} : Venta Creada".format(order_id.name)
                                 hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
@@ -74,7 +79,7 @@ class SaleOrder_HubSpot(models.Model):
                                     for order_row in line_items_associations:
                                         line_id = order_row.get('id')
                                         if line_id:
-                                            product_id = self.env['product.template'].hubsport_to_odoo_import_product_single(hubspot_crm, line_id)
+                                            product_id = self.env['product.template'].hubsport_to_odoo_import_product_single(hubspot_operation, hubspot_crm, line_id)
 
                                             line_item = self.get_line_orders_data_from_hubspot(hubspot_crm, line_id)
                                             quantity = line_item.get("properties").get("quantity") if line_item.get("properties", False) else 0

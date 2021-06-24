@@ -21,7 +21,7 @@ class ProductTemplate_HubSpot(models.Model):
         data = super(ProductTemplate_HubSpot, self).create(vals_list)
         ################################################################
         hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
-        if hubspot_crm.product_crud:
+        if hubspot_crm.product_crud and self._context.get('is_form_sale', False):
             self._cr.commit()
             try:
                 self.product_sincronize(data)
@@ -33,8 +33,9 @@ class ProductTemplate_HubSpot(models.Model):
     def write(self, values):
         data = super(ProductTemplate_HubSpot, self).write(values)
         ################################################################
+        _logger.info(self._context)
         hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
-        if hubspot_crm.product_crud:
+        if hubspot_crm.product_crud and self._context.get('is_form_sale', False):
             self._cr.commit()
             try:
                 if data == True:
@@ -198,9 +199,7 @@ class ProductTemplate_HubSpot(models.Model):
         self._cr.commit()
 
 
-    def hubsport_to_odoo_import_product_single(self, hubspot_crm, hubspot_lineitem_id):
-        
-        hubspot_operation = hubspot_crm.create_hubspot_operation('product','import',hubspot_crm,'Procesando...')
+    def hubsport_to_odoo_import_product_single(self, hubspot_operation, hubspot_crm, hubspot_lineitem_id):
         self._cr.commit()
         try:
             parameters = {"limit":"50","archived":"false","properties":"hs_object_id,hs_product_id,name,quantity,price"}
@@ -225,7 +224,6 @@ class ProductTemplate_HubSpot(models.Model):
                     })
                     process_message = "Producto Creado: {0}".format(product_product.name)
                     hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
-                    self._cr.commit()
             else:
                 process_message = "Error en la respuesta de importación de producto {}".format(response_data)
                 hubspot_crm.create_hubspot_operation_detail('product','import','',response_data,hubspot_operation,True,process_message)
@@ -235,5 +233,4 @@ class ProductTemplate_HubSpot(models.Model):
             _logger.info(process_message)
             hubspot_crm.create_hubspot_operation_detail('product','import',response_data,process_message,hubspot_operation,True,process_message)
             hubspot_operation.write({'hubspot_message': "El proceso aún no está completo, ocurrio un Error! %s" % (e)})
-        self._cr.commit()
         return product_product

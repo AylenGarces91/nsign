@@ -4,7 +4,7 @@
     'version': '0.0',
     'summary': """Permite importar datos como productos, ordernes, categorias y otros.""",
     'description': """""",
-    'depends': ['sale','sale_management','sale_stock','product','base'],
+    'depends': ['sale','sale_management','sale_stock','product','base','purchase','project'],
     'data': [
         'security/hubspot.xml',
         'security/ir.model.access.csv',
@@ -14,6 +14,8 @@
         'views/contact.xml',
         'views/product.xml',
         'views/sale_order.xml',
+        'views/purchase_order.xml',
+        'views/project_project.xml',
         'data/ir_cron.xml',
     ],
     'author': 'Develoop Software',

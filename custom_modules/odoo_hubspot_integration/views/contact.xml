@@ -10,14 +10,25 @@
                 <xpath expr="//sheet/notebook/page[last()]" position="after">
                     <page string="HubSpot">
                         <group>
-                            <group>
-                                <field name="hubspot_contact_id" readonly="1" />
-                                <field name="hubspot_contact_synchronized" readonly="1" />
-                            </group>
+                            <field name="hubspot_contact_id" readonly="1" />
+                            <field name="hubspot_contact_synchronized" readonly="1" />
                         </group>
                     </page>
                 </xpath>
             </field>
         </record>
+
+
+        <record id="res_partner_tree_hubspot_custom" model="ir.ui.view">
+            <field name="name">res.partner.tree.hubspot.custom</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_name']" position="after">
+                    <field name="hubspot_contact_id" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>
