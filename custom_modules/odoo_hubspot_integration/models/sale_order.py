@@ -23,7 +23,7 @@ class SaleOrder_HubSpot(models.Model):
                     "filterGroups":[{
                         "filters":[
                             { "value":"closedwon","propertyName":"dealstage","operator":"EQ" },
-                            { "value":last_order_id,"propertyName":"hs_object_id","operator":"GTE" }
+                            { "value":0,"propertyName":"hs_object_id","operator":"GTE" }
                         ]
                     }],
                     "sorts":[
