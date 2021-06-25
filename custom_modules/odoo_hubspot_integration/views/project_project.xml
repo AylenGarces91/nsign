@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='analytic_account_id']" position="after">
-                    <field name="hubspot_so_id" attrs="{'invisible':1 }" />
+                    <field name="x_compute" attrs="{'invisible':1 }" />
                 </xpath>
                 <xpath expr="//div[@class='o_primary']/span[2]" position="after">
                     <span t-if="record.hubspot_so_id and record.hubspot_so_id.value != ''">
