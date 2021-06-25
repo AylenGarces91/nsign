@@ -145,7 +145,7 @@ class ResPartner_HubSpot(models.Model):
             if response_status:
                 company = self.env['res.partner'].search([('hubspot_contact_id', '=', response_data.get('id'))], limit=1)
                 if not company:
-                    company = self.env['res.partner'].search([('is_company','=',True),('name','=',response_data.get('properties').get('name'))])
+                    company = self.env['res.partner'].search([('is_company','=',True),('name','=',response_data.get('properties').get('name'))], limit=1)
                     
                 if not company:
                     company = super(ResPartner_HubSpot, company).create({
@@ -194,9 +194,9 @@ class ResPartner_HubSpot(models.Model):
             response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("objects/contacts/%s" % hubspot_contact_id),payload)
             if response_status:
                 
-                contact = self.env['res.partner'].search([('hubspot_contact_id', '=', response_data.get('id'))])
+                contact = self.env['res.partner'].search([('hubspot_contact_id', '=', response_data.get('id'))], limit=1)
                 if not contact:
-                    contact = self.env['res.partner'].search([('is_company','=',False),('email','=',response_data.get('properties').get('email'))])
+                    contact = self.env['res.partner'].search([('is_company','=',False),('email','=',response_data.get('properties').get('email'))], limit=1)
                 
                 if not contact:
                     contact = super(ResPartner_HubSpot, contact).create({
