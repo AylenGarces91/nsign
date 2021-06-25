@@ -59,8 +59,8 @@ class SaleOrder_HubSpot(models.Model):
 
                                 if res_data_asociate.get("contacts", False) and res_data_asociate.get("contacts").get("results"):
                                     contact = self.env['res.partner'].get_contact_data_from_hubspot(hubspot_operation, hubspot_crm, res_data_asociate.get("contacts").get("results")[0].get("id"))
-                                    if company:
-                                        contact.write({'parent_id':company.id})
+                                    # if company:
+                                    #     contact.write({'parent_id':company.id})
 
                                 if not company and not contact:
                                     order_message = "El negocio no tiene un cliente asociado"
