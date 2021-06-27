@@ -6,7 +6,6 @@
     'description': """""",
     'depends': ['base','account'],
     'data': [
-        'views/menu.xml',
         'views/res_partner.xml',
         'views/account_move.xml',
     ],
