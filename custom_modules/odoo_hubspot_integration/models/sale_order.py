@@ -54,6 +54,8 @@ class SaleOrder_HubSpot(models.Model):
                                 res_data_asociate = deal_resp_data.get("associations")
                                 company = contact = False
 
+                                owner_id = self.get_owner(hubspot_crm, deal_resp_data.get('properties').get('hubspot_owner_id'))
+
                                 if res_data_asociate.get("companies", False) and res_data_asociate.get("companies").get("results"):
                                     company = self.env['res.partner'].get_company_data_from_hubspot(hubspot_operation, hubspot_crm, res_data_asociate.get("companies").get("results")[0].get("id"))
 
@@ -69,7 +71,7 @@ class SaleOrder_HubSpot(models.Model):
                                 
                                 order_contact = contact if contact else company
                                 
-                                order_id = self.create_sales_order_from_hubspot(order_contact, date_add, order.get('id'), hubspot_crm)
+                                order_id = self.create_sales_order_from_hubspot(order_contact, date_add, order.get('id'), owner_id)
                                 order_id.onchange_partner_id()
                                 order_message = "{} : Venta Creada".format(order_id.name)
                                 hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
@@ -111,12 +113,13 @@ class SaleOrder_HubSpot(models.Model):
         self._cr.commit()
 
 
-    def create_sales_order_from_hubspot(self, contact, date_add, sale_id, hubspot_crm):
+    def create_sales_order_from_hubspot(self, contact, date_add, sale_id, user_id):
         vals = {
             'partner_id': contact.id,
             'partner_invoice_id': contact.id,
             'partner_shipping_id': contact.id,
             'date_order': date_add,
+            'user_id': user_id,
             'hubspot_order_id': sale_id,
             'hubspot_order_imported': True,
         }
@@ -142,3 +145,19 @@ class SaleOrder_HubSpot(models.Model):
                 _logger.info("hubspot Get Order Response : {0}".format(response_data))
                 return response_data
         return False
+
+    def get_owner(self, hubspot_crm, hubspot_owner_id):
+        response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("owners/%s" % hubspot_owner_id))
+        user_id = self.env['ir.config_parameter'].sudo().get_param('x_user_admin_id')
+
+        if response_status and response_data.get('email', False):
+            user = self.env['res.users'].search([('email','=',response_data.get('email')),('groups_id','=',8)], limit=1)
+            if user:
+                return user.id
+            else:
+                #return self.env['res.users'].search([('partner_id','=',self.env.company.partner_id.id)], limit=1).id
+                return self.env['res.users'].search([('id','=',user_id)], limit=1).id
+        else:
+            return self.env['res.users'].search([('id','=',user_id)], limit=1).id
+            # return self.env['res.users'].search([('partner_id','=',self.env.company.partner_id.id)], limit=1).id
+        

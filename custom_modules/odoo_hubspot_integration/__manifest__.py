@@ -16,6 +16,7 @@
         'views/sale_order.xml',
         'views/purchase_order.xml',
         'views/project_project.xml',
+        'views/parameters.xml',
         'data/ir_cron.xml',
     ],
     'author': 'Develoop Software',

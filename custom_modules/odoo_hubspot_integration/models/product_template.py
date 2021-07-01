@@ -2,6 +2,7 @@ import logging
 import time
 
 from odoo import fields, models, api
+from odoo.http import request
 from datetime import datetime
 
 _logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ class ProductTemplate_HubSpot(models.Model):
         data = super(ProductTemplate_HubSpot, self).create(vals_list)
         ################################################################
         hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
-        if hubspot_crm.product_crud and self._context.get('is_form_sale', False):
+        if hubspot_crm.product_crud and request.params and request.params.get('method','') == 'create' and request.params.get('model','') == 'product.template':
             self._cr.commit()
             try:
                 self.product_sincronize(data)
@@ -35,7 +36,7 @@ class ProductTemplate_HubSpot(models.Model):
         ################################################################
         _logger.info(self._context)
         hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
-        if hubspot_crm.product_crud and self._context.get('is_form_sale', False):
+        if hubspot_crm.product_crud and request.params and request.params.get('method','') == 'write' and request.params.get('model','') == 'product.template':
             self._cr.commit()
             try:
                 if data == True:
