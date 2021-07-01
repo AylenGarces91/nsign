@@ -73,6 +73,7 @@ class SaleOrder_HubSpot(models.Model):
                                 
                                 order_id = self.create_sales_order_from_hubspot(order_contact, date_add, order.get('id'), owner_id)
                                 order_id.onchange_partner_id()
+                                order_id.user_id = owner_id
                                 order_message = "{} : Venta Creada".format(order_id.name)
                                 hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
                                 
