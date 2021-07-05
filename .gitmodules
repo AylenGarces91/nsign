@@ -27,3 +27,8 @@
 	path = OCA/account-financial-tools
 	url = git@github.com:OCA/account-financial-tools.git
 	branch = 13.0
+
+[submodule "OCA/multi-company"]
+	path = OCA/multi-company
+	url = git@github.com:OCA/multi-company.git
+	branch = 13.0
