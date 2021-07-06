@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_order_form_inherit_sale_timesheet_button_custom" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.timesheet.custom</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_timesheet.view_order_form_inherit_sale_timesheet"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_project_ids']" position="attributes">
+                    <attribute name="string"></attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_view_project_ids']/field[@name='project_ids']" position="after">
+                    <field name="project_count" widget="statinfo" string="Proyectos"/>
+                </xpath>
+           </field>
+        </record>
+</odoo>

@@ -1,0 +1,19 @@
+<odoo>
+
+    <data>
+        <menuitem name="HubSpot" id="hubspot_integration" web_icon="odoo_hubspot_integration,static/description/icon.png" sequence="6" />
+
+        <menuitem id="menu_hubspot_crm" name="Detalles de conexión"
+                  parent="hubspot_integration" sequence="1"
+                  action="odoo_hubspot_integration.action_hubspot_crm"/>
+
+        <menuitem id="menu_hubspot_operation" name="Detalles de Proceso"
+                  parent="hubspot_integration" sequence="2"
+                  action="odoo_hubspot_integration.action_hubspot_operation"/>
+
+        <menuitem id="menu_hubspot_error" name="Errores obtenidos"
+                  parent="hubspot_integration" sequence="3"
+                  action="odoo_hubspot_integration.action_hubspot_error"/>
+
+    </data>
+</odoo>

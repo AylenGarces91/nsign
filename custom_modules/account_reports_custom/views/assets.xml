@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="assets_account_custom_company_filter" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/account_reports_custom/static/src/js/account_renderview_custom.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>
