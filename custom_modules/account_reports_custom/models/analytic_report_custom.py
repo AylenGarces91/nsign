@@ -23,14 +23,15 @@ class analytic_report_custom(models.AbstractModel):
     def _get_report_name(self):
         return _('Analytic Report Custom')
 
-    def _generate_analytic_account_lines(self, analytic_accounts, parent_id=False):
+    def _generate_analytic_account_lines(self, analytic_accounts, parent_id=False, company=False):
         lines = []
         for account in analytic_accounts:
             # filter all analytics accounts if the account is related to a company
-            if account.line_ids and account.line_ids.partner_id and account.line_ids.partner_id.is_company:
+            if account.line_ids and \
+                    account.line_ids[0].partner_id and account.line_ids[0].partner_id.is_company:
                 lines.append({
                     'id': 'analytic_account_%s' % account.id,
-                    'name': account.line_ids.partner_id.display_name,
+                    'name': account.line_ids[0].partner_id.display_name,
                     'columns': [{'name': account.code},
                                 {'name': account.name},
                                 {'name': self.format_value(account.balance)}],
@@ -63,6 +64,11 @@ class analytic_report_custom(models.AbstractModel):
             analytic_partner_ids = [int(id) for id in options['partner_ids']]
             analytic_entries_domain += [('partner_id.id', 'in', analytic_partner_ids)]
             analytic_account_domain += [('line_ids.partner_id.id', 'in', analytic_partner_ids)]
+
+        if options.get('partner_categories'):
+            analytic_partner_categories = [int(id) for id in options['partner_categories']]
+            analytic_entries_domain += [('partner_id.category_id.id', 'in', analytic_partner_categories)]
+            analytic_account_domain += [('line_ids.partner_id.category_id.id', 'in', analytic_partner_categories)]
 
 
         if options.get('multi_company'):
