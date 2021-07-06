@@ -1,6 +1,15 @@
 [submodule "OCA/mis-builder"]
 	path = OCA/mis-builder
 	url = git@github.com:OCA/mis-builder.git
+
+[submodule "OCA/l10n-spain"]
+	path = OCA/l10n-spain
+	url = git@github.com:OCA/l10n-spain.git
+	branch = 13.0
+
+[submodule "OCA/account-financial-reporting"]
+	path = OCA/account-financial-reporting
+	url = git@github.com:OCA/account-financial-reporting.git
 	branch = 13.0
 
 [submodule "OCA/server-ux"]
@@ -8,9 +17,9 @@
 	url = git@github.com:OCA/server-ux.git
 	branch = 13.0
 
-[submodule "OCA/account-financial-reporting"]
-	path = OCA/account-financial-reporting
-	url = git@github.com:OCA/account-financial-reporting.git
+[submodule "OCA/account-financial-tools"]
+	path = OCA/account-financial-tools
+	url = git@github.com:OCA/account-financial-tools.git
 	branch = 13.0
 
 [submodule "OCA/reporting-engine"]
@@ -23,12 +32,16 @@
 	url = git@github.com:OCA/account-payment.git
 	branch = 13.0
 
-[submodule "OCA/account-financial-tools"]
-	path = OCA/account-financial-tools
-	url = git@github.com:OCA/account-financial-tools.git
-	branch = 13.0
-
 [submodule "OCA/multi-company"]
 	path = OCA/multi-company
 	url = git@github.com:OCA/multi-company.git
+
+[submodule "OCA/partner-contact"]
+	path = OCA/partner-contact
+	url = git@github.com:OCA/partner-contact.git
+	branch = 13.0
+
+[submodule "OCA/community-data-files"]
+	path = OCA/community-data-files
+	url = git@github.com:OCA/community-data-files.git
 	branch = 13.0
