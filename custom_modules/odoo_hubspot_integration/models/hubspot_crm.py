@@ -7,6 +7,18 @@ from requests import request
 
 _logger = logging.getLogger("hubSpot")
 
+class hubspotPipelines(models.Model):
+
+    _name = "hubspot.pipeline"
+    _description = "Hubspot Pipeline"
+
+    pipeline_id = fields.Char("Pipeline Id", required=True)
+    stage_win = fields.Char("Estapa ganada", required=True)
+    percent_incomplete = fields.Char("Invoiced < 100%")
+    percent_complete = fields.Char("Invoiced 100%")
+    company_id = fields.Many2one('res.company', string="Compañia", required=True)
+    hubspot_crm_id = fields.Many2one('hubspot.crm', string='Hubspot CRM', required=True)
+
 class hubspotCredentailDetails(models.Model):
     
     _name = "hubspot.crm"
@@ -16,18 +28,10 @@ class hubspotCredentailDetails(models.Model):
     hubspot_api_key = fields.Char("HubSpot API Key", required=True, help="Go in the hubspot back office and get Key.")
 
     contact_crud =  fields.Boolean(string="Crear y Modificar inmediatamente", default=True)
-
-    product_sync = fields.Boolean(string="Sincronizar Productos", default=True)
-    product_import = fields.Boolean(string="Importar Productos", default=True)
-    product_export = fields.Boolean(string="Exportar Productos", default=True)
     product_crud =  fields.Boolean(string="Crear y Modificar inmediatamente", default=True)
-
-    sale_sync = fields.Boolean(string="Sincronizar Ventas", default=True)
     sale_import = fields.Boolean(string="Importar Ventas", default=True)
-    sale_order_id_imported = fields.Char(string="Ultima Venta Importada")
-    sale_percent_complete = fields.Char(string="Nombre Etapa Invoiced 100%")
-    sale_percent_incomplete = fields.Char(string="Nombre Etapa Invoiced %")
-
+    
+    pipeline = fields.One2many("hubspot.pipeline", "hubspot_crm_id", string="Pipelines")
 
     def create_hubspot_operation(self, operation, operation_type, hubspot_crm_id, log_message):
         vals = {
@@ -125,12 +129,13 @@ class hubspotCredentailDetails(models.Model):
 
 
     def auto_sincronize_hubspot_odoo(self):
-        if self.sale_import:
+        if self == self.env['hubspot.crm']:
+            data = self.env['hubspot.crm'].search([], limit=1)
+            self.env['sale.order'].hubspot_to_odoo_import_orders(data)
+        else:
             self.env['sale.order'].hubspot_to_odoo_import_orders(self)
 
     def sincronize_product_hubspot_odoo(self):
-        if self.product_import:
-            self.env['product.template'].hubsport_to_odoo_import_product_all(self)
+        self.env['product.template'].hubsport_to_odoo_import_product_all(self)
         time.sleep(5)
-        if self.product_export:
-            self.env['product.template'].hubsport_to_odoo_export_product_all(self)
+        self.env['product.template'].hubsport_to_odoo_export_product_all(self)

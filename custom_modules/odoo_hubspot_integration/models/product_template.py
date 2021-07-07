@@ -215,9 +215,11 @@ class ProductTemplate_HubSpot(models.Model):
                     fecha_modificacion = response_data.get('properties').get('hs_lastmodifieddate')
                     fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
 
+                    user_admin = self.env['ir.config_parameter'].sudo().get_param('x_user_admin_id')
                     product_product = self.env['product.template'].create({
                         'name': response_data.get('properties').get('name'),
                         'type':'product',
+                        'responsible_id': int(user_admin),
                         'hubspot_lineitem_id': response_data.get('properties').get('hs_object_id', False),
                         'hubspot_product_id': response_data.get('properties').get('hs_product_id', False),
                         'hubspot_product_synchronized': True,
