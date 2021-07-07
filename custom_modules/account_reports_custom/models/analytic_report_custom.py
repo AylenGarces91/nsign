@@ -9,6 +9,7 @@ class analytic_report_custom(models.AbstractModel):
     _name = 'account.analytic.report.custom'
     _description = 'Account Analytic Report Custom'
 
+    filter_analytic = None
     filter_group_company = False
     filter_partner = True
 
