@@ -61,7 +61,9 @@ class SaleOrder_HubSpot(models.Model):
                                         hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
                                         continue
 
-                                    owner_id = self.get_owner(hubspot_crm, deal_resp_data.get('properties').get('hubspot_owner_id'))
+                                    owner_id = False
+                                    if deal_resp_data.get('properties').get('hubspot_owner_id'):
+                                        owner_id = self.get_owner(hubspot_crm, deal_resp_data.get('properties').get('hubspot_owner_id'))
 
                                     if res_data_asociate.get("companies", False) and res_data_asociate.get("companies").get("results"):
                                         company = self.env['res.partner'].get_company_data_from_hubspot(hubspot_operation, hubspot_crm, res_data_asociate.get("companies").get("results")[0].get("id"))
