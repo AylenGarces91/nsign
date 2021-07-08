@@ -1,6 +1,7 @@
 from odoo import fields, models, api
 import logging
 import time
+import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -44,7 +45,7 @@ class SaleOrder_HubSpot(models.Model):
 
                             if not order_existing_id:
                                 date_add = order.get("properties").get("closedate")
-                                date_add = hubspot_crm.convert_date_iso_format(date_add)
+                                date_add = hubspot_crm.convert_date_iso_format(date_add) if date_add else False
 
                                 params = {
                                     "properties": ["hs_object_id,amount,closedate,dealname,dealstage,createdate,hs_lastmodifieddate,hubspot_owner_id,pipeline"],
