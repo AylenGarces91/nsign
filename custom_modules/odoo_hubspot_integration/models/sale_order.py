@@ -1,5 +1,6 @@
 from odoo import fields, models, api
 import logging
+import time
 
 _logger = logging.getLogger(__name__)
 
@@ -56,7 +57,7 @@ class SaleOrder_HubSpot(models.Model):
                                     company = contact = False
 
                                     if res_data_asociate is None:
-                                        order_message = "El negocio no tiene un cliente ni tampoco empresa"
+                                        order_message = "El negocio %s no tiene un cliente ni tampoco empresa" % order.get('id')
                                         hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
                                         continue
 
@@ -84,18 +85,19 @@ class SaleOrder_HubSpot(models.Model):
                                     hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
                                     
                                     # Order Line Creation Part
-                                    line_items_associations = res_data_asociate and res_data_asociate.get("line items").get("results")
-                                    
-                                    if line_items_associations and order_id:
-                                        for order_row in line_items_associations:
-                                            line_id = order_row.get('id')
-                                            if line_id:
-                                                product_id = self.env['product.template'].hubsport_to_odoo_import_product_single(hubspot_operation, hubspot_crm, line_id)
+                                    if res_data_asociate and res_data_asociate.get("line items"):
+                                        line_items_associations = res_data_asociate and res_data_asociate.get("line items").get("results")
+                                        
+                                        if line_items_associations and order_id:
+                                            for order_row in line_items_associations:
+                                                line_id = order_row.get('id')
+                                                if line_id:
+                                                    product_id = self.env['product.template'].hubsport_to_odoo_import_product_single(hubspot_operation, hubspot_crm, line_id)
 
-                                                line_item = self.get_line_orders_data_from_hubspot(hubspot_crm, line_id)
-                                                quantity = line_item.get("properties").get("quantity") if line_item.get("properties", False) else 0
-                                                price = line_item.get("properties").get("price") if line_item.get("properties", False) else 0
-                                                line = self.create_sale_order_line_from_hubspot(order_id.id, product_id, quantity, price)
+                                                    line_item = self.get_line_orders_data_from_hubspot(hubspot_crm, line_id)
+                                                    quantity = line_item.get("properties").get("quantity") if line_item.get("properties", False) else 0
+                                                    price = line_item.get("properties").get("price") if line_item.get("properties", False) else 0
+                                                    line = self.create_sale_order_line_from_hubspot(order_id.id, product_id, quantity, price)
                                     
                                     self._cr.commit()
                                     order_message = "Venta importada: %s" % (order_id.name)
@@ -106,6 +108,7 @@ class SaleOrder_HubSpot(models.Model):
 
                         if order_response_data.get('paging', False) and order_response_data.get('paging').get('next',False) and order_response_data.get('paging').get('next').get('after',False):
                             after = order_response_data.get('paging').get('next').get('after')
+                            time.sleep(5)
                         else:
                             order_message = "Importacion de la etapa %s importado " % (pipeline.stage_win)
                             hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order, hubspot_operation, True, order_message)
