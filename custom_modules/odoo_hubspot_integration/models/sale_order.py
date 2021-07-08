@@ -62,7 +62,7 @@ class SaleOrder_HubSpot(models.Model):
                                         continue
 
                                     owner_id = False
-                                    if deal_resp_data.get('properties').get('hubspot_owner_id'):
+                                    if deal_resp_data.get('properties').get('hubspot_owner_id', False):
                                         owner_id = self.get_owner(hubspot_crm, deal_resp_data.get('properties').get('hubspot_owner_id'))
 
                                     if res_data_asociate.get("companies", False) and res_data_asociate.get("companies").get("results"):
