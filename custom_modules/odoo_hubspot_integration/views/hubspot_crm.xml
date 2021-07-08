@@ -20,7 +20,7 @@
                 <form string="HubSpot detalles de conexión">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button type="object" name="auto_sincronize_hubspot_odoo" class="oe_stat_button" icon="fa-cart-plus" string="Ordenes"/>
+                            <!-- <button type="object" name="auto_sincronize_hubspot_odoo" class="oe_stat_button" icon="fa-cart-plus" string="Ordenes"/> -->
                             <button type="object" name="sincronize_product_hubspot_odoo" class="oe_stat_button" icon="fa-cart-plus" string="Producto dia 1"/>
                         </div>
                         <group>
@@ -42,8 +42,6 @@
                                 <group>
                                     <group>
                                         <separator string="Sincronizar Productos"/>
-                                        <field name="product_import"/>
-                                        <field name="product_export"/>
                                         <field name="product_crud"/>
                                     </group>
                                 </group>
@@ -63,17 +61,30 @@
                                     <group>
                                         <separator string="Sincronizar Ventas"/>
                                         <field name="sale_import"/>
-                                        <field name="sale_order_id_imported" string="Ultima orden importada" readonly="1" />
-                                        <field name="sale_percent_complete"/>
-                                        <field name="sale_percent_incomplete"/>
                                     </group>
                                 </group>
-                                <group>
+                                <!-- <group>
                                     <group>
                                         <button name="action_sale_import" type="object" class="btn btn-primary" >
                                             <i class="fa fa-cloud-download pr-1"/><span>Importar Ventas</span>
                                         </button>
                                     </group>
+                                </group> -->
+                            </page>
+                            <page string="Pipelines" name="page_pipeline">
+                                <group>
+                                    <field name="pipeline" widget="section_and_note_one2many" mode="tree" nolabel="1" >
+                                        <tree string="Pipelines Lines" editable="bottom" >
+                                            <control>
+                                                <create name="add_product_control" string="Añadir un pipeline"/>
+                                            </control>
+                                            <field name="pipeline_id" string="Pipeline Id" />
+                                            <field name="stage_win" string="Etapa Ganada" />
+                                            <field name="percent_incomplete" string="Invoice" />
+                                            <field name="percent_complete" string="Invoice 100%" />
+                                            <field name="company_id" string="Compañia" />
+                                        </tree>
+                                    </field>
                                 </group>
                             </page>
                         </notebook>

@@ -4,7 +4,7 @@
     'version': '0.0',
     'summary': """Permite importar datos como productos, ordernes, categorias y otros.""",
     'description': """""",
-    'depends': ['sale','sale_management','sale_stock','product','base','purchase','project'],
+    'depends': ['base','sale','sale_management','sale_stock','product','purchase','project'],
     'data': [
         'security/hubspot.xml',
         'security/ir.model.access.csv',
