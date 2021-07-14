@@ -94,10 +94,49 @@
         </record>
 
         <record id="action_hubspot_error" model="ir.actions.act_window">
-            <field name="name">Fault Data</field>
+            <field name="name">Datos Erroneos</field>
             <field name="res_model">hubspot.operation.details</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('fault_operation','=',True)]</field>
+        </record>
+
+
+        <record id="view_hubspot_view_create_log" model="ir.ui.view">
+            <field name="name">hubspot creation log custom</field>
+            <field name="model">hubspot.creation.log</field>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <search string="Search Hubspot">
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+
+                    <filter name="contact" string="Contacto" domain="[('data_type', '=', 'contact')]" />
+                    <filter name="product" string="Producto" domain="[('data_type', '=', 'product')]" />
+               </search>
+            </field>
+        </record>
+        
+        <record id="action_hubspot_view_create_log" model="ir.actions.act_window">
+            <field name="name">Datos Creados</field>
+            <field name="res_model">hubspot.creation.log</field>
+            <field name="view_mode">tree</field>
+            <!-- <field name="domain">[('fault_operation','=',True)]</field> -->
+            <field name="search_view_id" ref="view_hubspot_view_create_log"/>
+        </record>
+
+        <record id="view_hubspot_view_create_log_tree" model="ir.ui.view">
+            <field name="name">view_hubspot_view_create_log_tree</field>
+            <field name="model">hubspot.creation.log</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Datos creados" create='false'>
+                    <field name="data_type" invisible="1"/>
+                    <field name="create_date" string="Fecha creacion"/>
+                    <field name="partner_id" /> <!-- optional="show" -->
+                    <field name="product_id" />
+                    <field name="sale_order_id" />
+                </tree>
+            </field>
         </record>
 
     </data>

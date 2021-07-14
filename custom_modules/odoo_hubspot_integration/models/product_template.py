@@ -133,8 +133,10 @@ class ProductTemplate_HubSpot(models.Model):
                             })
                             process_message = "Producto Creado: {0}".format(product_template.name)
                             hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
+                            self.env['hubspot.creation.log'].data_create(product_id=product_template.product_variant_id.id)
                         else:
                             super(ProductTemplate_HubSpot, product_template).write({
+                                'price': properties.get('price') and float(properties.get('price',0)),
                                 'hubspot_lineitem_id': False,
                                 'hubspot_product_id': properties.get('hs_object_id'),
                                 'hubspot_product_synchronized': True,
@@ -200,7 +202,7 @@ class ProductTemplate_HubSpot(models.Model):
         self._cr.commit()
 
 
-    def hubsport_to_odoo_import_product_single(self, hubspot_operation, hubspot_crm, hubspot_lineitem_id):
+    def hubsport_to_odoo_import_product_single(self, hubspot_operation, hubspot_crm, hubspot_lineitem_id, order_id):
         self._cr.commit()
         try:
             parameters = {"limit":"50","archived":"false","properties":"hs_object_id,hs_product_id,name,quantity,price"}
@@ -227,6 +229,7 @@ class ProductTemplate_HubSpot(models.Model):
                     })
                     process_message = "Producto Creado: {0}".format(product_product.name)
                     hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
+                    self.env['hubspot.creation.log'].data_create(product_id=product_product.product_variant_id.id, sale_order_id=order_id.id)
             else:
                 process_message = "Error en la respuesta de importación de producto {}".format(response_data)
                 hubspot_crm.create_hubspot_operation_detail('product','import','',response_data,hubspot_operation,True,process_message)

@@ -14,6 +14,7 @@
                         </group>
                     </page>
                 </xpath>
+
             </field>
         </record>
 
@@ -23,6 +24,18 @@
             <field name="inherit_id" ref="sale.view_quotation_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="hubspot_order_id" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="sale_order_list_select_custom" model="ir.ui.view">
+            <field name="name">sale_order_list_select_custom</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
                     <field name="hubspot_order_id" readonly="1"/>
                 </xpath>
             </field>
