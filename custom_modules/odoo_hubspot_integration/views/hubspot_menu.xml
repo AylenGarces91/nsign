@@ -15,5 +15,9 @@
                   parent="hubspot_integration" sequence="3"
                   action="odoo_hubspot_integration.action_hubspot_error"/>
 
+        <menuitem id="menu_hubspot_create_log" name="Datos creados en Odoo"
+                  parent="hubspot_integration" sequence="4"
+                  action="odoo_hubspot_integration.action_hubspot_view_create_log"/>
+
     </data>
 </odoo>

@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+from odoo.http import request
 import logging
 import time
 
@@ -18,7 +19,7 @@ class ResPartner_HubSpot(models.Model):
         partners = super(ResPartner_HubSpot, self).create(vals_list)
         ################################################################
         hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
-        if hubspot_crm.contact_crud and self._context.get('is_form_contact', False):
+        if hubspot_crm.contact_crud and request.params and request.params.get('method','') == 'create' and request.params.get('model','') == 'res.partner':
             self._cr.commit()
             try:
                 self.contact_sincronize(partners)
@@ -33,7 +34,7 @@ class ResPartner_HubSpot(models.Model):
         ################################################################
         _logger.info(self._context)
         hubspot_crm = self.env['hubspot.crm'].search([('id','!=',False)], limit=1)
-        if hubspot_crm.contact_crud and self._context.get('is_form_contact', False):
+        if hubspot_crm.contact_crud and request.params and request.params.get('method','') == 'write' and request.params.get('model','') == 'res.partner':
             self._cr.commit()
             try:
                 if partners == True:
@@ -137,15 +138,14 @@ class ResPartner_HubSpot(models.Model):
 
     def get_company_data_from_hubspot(self, hubspot_operation, hubspot_crm, hubspot_company_id):
         try:
-            payload = {
-                "properties":["name","phone","domain","address","zip"]
-            }
-
+            payload = { "properties":["name","phone","domain","address","zip","cif"] }
+            log = False
+            
             response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("objects/companies/%s" % hubspot_company_id), payload)
             if response_status:
                 company = self.env['res.partner'].search([('hubspot_contact_id', '=', response_data.get('id'))], limit=1)
                 if not company:
-                    company = self.env['res.partner'].search([('is_company','=',True),('name','=',response_data.get('properties').get('name'))], limit=1)
+                    company = self.env['res.partner'].search([('is_company','=',True),('vat','=',response_data.get('properties').get('cif'))], limit=1)
                     
                 if not company:
                     company = super(ResPartner_HubSpot, company).create({
@@ -160,6 +160,7 @@ class ResPartner_HubSpot(models.Model):
                         'hubspot_contact_synchronized': True,
                     })
                     process_message = "Contacto Empresa Creada: {0}".format(company.name)
+                    log = self.env['hubspot.creation.log'].data_create(partner_id=company.id)
                 else:
                     super(ResPartner_HubSpot, company).write({
                         'name': response_data.get('properties').get('name'),
@@ -183,7 +184,7 @@ class ResPartner_HubSpot(models.Model):
             process_message="Error en la respuesta de importación de contacto empresa {}".format(e)
             _logger.info(process_message)
             hubspot_crm.create_hubspot_operation_detail('contact_company','import',response_data,process_message,hubspot_operation,True,process_message)
-        return company
+        return company, log
 
     def get_contact_data_from_hubspot(self, hubspot_operation, hubspot_crm, hubspot_contact_id):
         try:

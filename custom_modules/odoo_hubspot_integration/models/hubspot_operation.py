@@ -1,3 +1,4 @@
+
 from odoo import models, fields, api
 import datetime
 
@@ -71,3 +72,25 @@ class hubspotOperationDetail(models.Model):
             company_id = operation and operation.company_id.id or self.env.user.company_id.id
             vals.update({'company_id': company_id})
         return super(hubspotOperationDetail, self).create(vals)
+
+
+class hubspotCreationData(models.Model):
+    _name = "hubspot.creation.log"
+    _order = 'id desc'
+    _description = "HubSpot Operation"
+    
+    partner_id = fields.Many2one('res.partner', string="Cliente")
+    product_id = fields.Many2one('product.product', string="Producto")
+    sale_order_id = fields.Many2one('sale.order', string="Venta")
+    data_type = fields.Selection([
+        ('contact', 'Contacto'),
+        ('product', 'Producto')
+        ], string="Tipo de dato")
+
+    def data_create(self, partner_id=False, product_id=False, sale_order_id=False):
+        self.env['hubspot.creation.log'].create({
+            'partner_id': partner_id,
+            'product_id': product_id,
+            'sale_order_id': sale_order_id,
+            'data_type': 'contact' if partner_id else 'product'
+        })
