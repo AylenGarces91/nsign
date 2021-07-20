@@ -150,6 +150,7 @@ class SaleOrder_HubSpot(models.Model):
             if data_asociation.get("companies", False) and data_asociation.get("companies").get("results"):
                 contact = self.env['res.partner'].get_company_data_from_hubspot(hubspot_operation, hubspot_crm, data_asociation.get("companies").get("results")[0].get("id"))
             if not contact:
+                
                 toReturn = False
 
             if data_asociation.get("line items") is None or data_asociation.get("line items").get("results", False) == False:

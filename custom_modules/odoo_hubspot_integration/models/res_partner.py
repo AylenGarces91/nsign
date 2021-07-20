@@ -159,7 +159,7 @@ class ResPartner_HubSpot(models.Model):
                         return company
                     else:
                         process_message = "Contacto empresa no encontrado cif: {0}".format(response_data.get('properties').get('cif'))
-                        hubspot_crm.create_hubspot_operation_detail('contact_company', 'import', False, response_data, hubspot_operation, False, process_message)
+                        hubspot_crm.create_hubspot_operation_detail('contact_company', 'import', False, response_data, hubspot_operation, True, process_message)
                         return False
             else:
                 process_message = "Error en la respuesta de importación de contacto empresa {}".format(response_data)
