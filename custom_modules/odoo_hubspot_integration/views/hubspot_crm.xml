@@ -20,7 +20,6 @@
                 <form string="HubSpot detalles de conexión">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <!-- <button type="object" name="auto_sincronize_hubspot_odoo" class="oe_stat_button" icon="fa-cart-plus" string="Ordenes"/> -->
                             <button type="object" name="sincronize_product_hubspot_odoo" class="oe_stat_button" icon="fa-cart-plus" string="Producto dia 1"/>
                         </div>
                         <group>
@@ -43,6 +42,7 @@
                                     <group>
                                         <separator string="Sincronizar Productos"/>
                                         <field name="product_crud"/>
+                                        <field name="product_create"/>
                                     </group>
                                 </group>
                                 <group>
@@ -63,13 +63,6 @@
                                         <field name="sale_import"/>
                                     </group>
                                 </group>
-                                <!-- <group>
-                                    <group>
-                                        <button name="action_sale_import" type="object" class="btn btn-primary" >
-                                            <i class="fa fa-cloud-download pr-1"/><span>Importar Ventas</span>
-                                        </button>
-                                    </group>
-                                </group> -->
                             </page>
                             <page string="Pipelines" name="page_pipeline">
                                 <group>

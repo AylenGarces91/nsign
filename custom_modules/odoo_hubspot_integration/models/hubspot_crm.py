@@ -29,6 +29,7 @@ class hubspotCredentailDetails(models.Model):
 
     contact_crud =  fields.Boolean(string="Crear y Modificar inmediatamente", default=True)
     product_crud =  fields.Boolean(string="Crear y Modificar inmediatamente", default=True)
+    product_create =  fields.Boolean(string="Crear al importar", default=True)
     sale_import = fields.Boolean(string="Importar Ventas", default=True)
     
     pipeline = fields.One2many("hubspot.pipeline", "hubspot_crm_id", string="Pipelines")
@@ -137,5 +138,5 @@ class hubspotCredentailDetails(models.Model):
 
     def sincronize_product_hubspot_odoo(self):
         self.env['product.template'].hubsport_to_odoo_import_product_all(self)
-        time.sleep(5)
-        self.env['product.template'].hubsport_to_odoo_export_product_all(self)
+        # time.sleep(5)
+        # self.env['product.template'].hubsport_to_odoo_export_product_all(self)  YA NO EXPORTAR A HUBSPOT
