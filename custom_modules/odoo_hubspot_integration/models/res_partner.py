@@ -139,53 +139,38 @@ class ResPartner_HubSpot(models.Model):
     def get_company_data_from_hubspot(self, hubspot_operation, hubspot_crm, hubspot_company_id):
         try:
             payload = { "properties":["name","phone","domain","address","zip","cif"] }
-            log = False
             
             response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("objects/companies/%s" % hubspot_company_id), payload)
             if response_status:
                 company = self.env['res.partner'].search([('hubspot_contact_id', '=', response_data.get('id'))], limit=1)
-                if not company:
-                    company = self.env['res.partner'].search([('is_company','=',True),('vat','=',response_data.get('properties').get('cif'))], limit=1)
-                    
-                if not company:
-                    company = super(ResPartner_HubSpot, company).create({
-                        'name': response_data.get('properties').get('name'),
-                        "phone": response_data.get('properties').get('phone', False),
-                        "website": response_data.get('properties').get('domain', False),
-                        "street": response_data.get('properties').get('address', False),
-                        "zip": response_data.get('properties').get('zip', False),
-                        'is_company': True,
-                        'company_type': 'company',
-                        'hubspot_contact_id': response_data.get('properties').get('hs_object_id'),
-                        'hubspot_contact_synchronized': True,
-                    })
-                    process_message = "Contacto Empresa Creada: {0}".format(company.name)
-                    log = self.env['hubspot.creation.log'].data_create(partner_id=company.id)
+                if company:
+                    process_message = "Contacto empresa encontrado por hubspotId: {0}".format(company.name)
+                    hubspot_crm.create_hubspot_operation_detail('contact_company', 'import', False, response_data, hubspot_operation, False, process_message)
+                    return company
                 else:
-                    super(ResPartner_HubSpot, company).write({
-                        'name': response_data.get('properties').get('name'),
-                        "phone": response_data.get('properties').get('phone', False),
-                        "website": response_data.get('properties').get('domain', False),
-                        "street": response_data.get('properties').get('address', False),
-                        "zip": response_data.get('properties').get('zip', False),
-                        'is_company': True,
-                        'company_type': 'company',
-                        'hubspot_contact_id': response_data.get('properties').get('hs_object_id'),
-                        'hubspot_contact_synchronized': True,
-                    })
-                    process_message = "Contacto Empresa Actualizada: {0}".format(company.name)
-
-                hubspot_crm.create_hubspot_operation_detail('contact_company', 'import', False, response_data, hubspot_operation, False, process_message)
+                    company = self.env['res.partner'].search([('is_company','=',True),('vat','=',response_data.get('properties').get('cif'))], limit=1)
+                    if company:
+                        super(ResPartner_HubSpot, company).write({
+                            'hubspot_contact_id': response_data.get('properties').get('hs_object_id'),
+                            'hubspot_contact_synchronized': True,
+                        })
+                        process_message = "Contacto empresa actualizada por Cif: {0}".format(company.name)
+                        hubspot_crm.create_hubspot_operation_detail('contact_company', 'import', False, response_data, hubspot_operation, False, process_message)
+                        return company
+                    else:
+                        process_message = "Contacto empresa no encontrado cif: {0}".format(response_data.get('properties').get('cif'))
+                        hubspot_crm.create_hubspot_operation_detail('contact_company', 'import', False, response_data, hubspot_operation, False, process_message)
+                        return False
             else:
-                process_message = "Error en la respuesta de importación de contacto Empresa {}".format(response_data)
+                process_message = "Error en la respuesta de importación de contacto empresa {}".format(response_data)
                 hubspot_crm.create_hubspot_operation_detail('contact_company','import','',response_data,hubspot_operation,True,process_message)
-
+                return False
         except Exception as e:
             process_message="Error en la respuesta de importación de contacto empresa {}".format(e)
             _logger.info(process_message)
             hubspot_crm.create_hubspot_operation_detail('contact_company','import',response_data,process_message,hubspot_operation,True,process_message)
-        return company, log
 
+    # Funcion no utilizado
     def get_contact_data_from_hubspot(self, hubspot_operation, hubspot_crm, hubspot_contact_id):
         try:
             payload = {
