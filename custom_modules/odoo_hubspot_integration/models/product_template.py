@@ -202,7 +202,7 @@ class ProductTemplate_HubSpot(models.Model):
                             return product_product
                         else:
                             process_message = "Producto no encontrado {0}{1}".format(response_data.get('properties').get('hs_product_id',False), response_data.get('id'))
-                            hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
+                            hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, True, process_message)
             else:
                 process_message = "Error en la respuesta de importación de producto {}".format(response_data)
                 hubspot_crm.create_hubspot_operation_detail('product','import','',response_data,hubspot_operation,True,process_message)
