@@ -63,17 +63,17 @@ class SaleOrder_HubSpot(models.Model):
                                     
                                     self._cr.commit()
                                     order_message = "Venta importada: %s" % (order_id.name)
-                                    hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order, hubspot_operation, True, order_message)
+                                    hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order, hubspot_operation, False, order_message)
                             else:
                                 order_message = "%s : %s : Order Already Exist in Odoo" % (order_existing_id and order_existing_id.name, order.get('id'))
-                                hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order, hubspot_operation, True, order_message)
+                                hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order, hubspot_operation, False, order_message)
 
                         if order_response_data.get('paging', False) and order_response_data.get('paging').get('next',False) and order_response_data.get('paging').get('next').get('after',False):
                             after = order_response_data.get('paging').get('next').get('after')
                             time.sleep(5)
                         else:
                             order_message = "Importacion de la etapa %s importado " % (pipeline.stage_win)
-                            hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order, hubspot_operation, True, order_message)
+                            hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order, hubspot_operation, False, order_message)
                             break
 
             hubspot_operation and hubspot_operation.write({'hubspot_message': "¡El proceso se completó con éxito!"})
