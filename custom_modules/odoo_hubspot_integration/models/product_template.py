@@ -120,21 +120,21 @@ class ProductTemplate_HubSpot(models.Model):
                         fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
 
                         if not product_template:
-                            product_template = super(ProductTemplate_HubSpot, self).create({
-                                'name': properties.get('name'),
-                                'description_sale': properties.get('description', False),
-                                'default_code': properties.get('hs_sku', False),
-                                'price': properties.get('price') and float(properties.get('price',0)),
-                                'standard_price': properties.get('hs_cost_of_goods_sold') and float(properties.get('hs_cost_of_goods_sold',0)),
-                                'type':'product',
-                                'hubspot_lineitem_id': False,
-                                'hubspot_product_id': properties.get('hs_object_id'),
-                                'hubspot_product_synchronized': True,
-                                'hubspot_write_date': fecha_modificacion,
-                            })
-                            process_message = "Producto Creado: {0}".format(product_template.name)
-                            hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
-                            self.env['hubspot.creation.log'].data_create(product_id=product_template.product_variant_id.id)
+                            # product_template = super(ProductTemplate_HubSpot, self).create({
+                            #     'name': properties.get('name'),
+                            #     'description_sale': properties.get('description', False),
+                            #     'default_code': properties.get('hs_sku', False),
+                            #     'price': properties.get('price') and float(properties.get('price',0)),
+                            #     'standard_price': properties.get('hs_cost_of_goods_sold') and float(properties.get('hs_cost_of_goods_sold',0)),
+                            #     'type':'product',
+                            #     'hubspot_lineitem_id': False,
+                            #     'hubspot_product_id': properties.get('hs_object_id'),
+                            #     'hubspot_product_synchronized': True,
+                            #     'hubspot_write_date': fecha_modificacion,
+                            # })
+                            process_message = "Producto no encontrado: {0}".format(product_template.name)
+                            hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, True, process_message)
+                            #self.env['hubspot.creation.log'].data_create(product_id=product_template.product_variant_id.id)
                         else:
                             super(ProductTemplate_HubSpot, product_template).write({
                                 'price': properties.get('price') and float(properties.get('price',0)),
