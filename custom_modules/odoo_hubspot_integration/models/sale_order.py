@@ -107,7 +107,7 @@ class SaleOrder_HubSpot(models.Model):
     def create_sale_order_line_from_hubspot(self, order_id, product_id, hubspot_crm, line_id):
         line_item = self.get_line_orders_data_from_hubspot(hubspot_crm, line_id)
         name = line_item.get("properties").get("description") if line_item.get("properties", '') != '' else 0
-        if name is None or name == False:
+        if name is None or name == False or name == '':
             name = product_id.description_sale if product_id.description_sale else product_id.display_name
         quantity = line_item.get("properties").get("quantity") if line_item.get("properties", False) else 0
         price = line_item.get("properties").get("price") if line_item.get("properties", False) else 0

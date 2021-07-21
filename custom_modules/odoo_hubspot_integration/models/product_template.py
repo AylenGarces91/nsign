@@ -120,21 +120,21 @@ class ProductTemplate_HubSpot(models.Model):
                         fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
 
                         if not product_template:
-                            product_template = super(ProductTemplate_HubSpot, self).create({
-                                'name': properties.get('name'),
-                                'description_sale': properties.get('description', False),
-                                'default_code': properties.get('hs_sku', False),
-                                'price': properties.get('price') and float(properties.get('price',0)),
-                                'standard_price': properties.get('hs_cost_of_goods_sold') and float(properties.get('hs_cost_of_goods_sold',0)),
-                                'type':'product',
-                                'hubspot_lineitem_id': False,
-                                'hubspot_product_id': properties.get('hs_object_id'),
-                                'hubspot_product_synchronized': True,
-                                'hubspot_write_date': fecha_modificacion,
-                            })
-                            process_message = "Producto Creado: {0}".format(product_template.name)
+                            # product_template = super(ProductTemplate_HubSpot, self).create({
+                            #     'name': properties.get('name'),
+                            #     'description_sale': properties.get('description', False),
+                            #     'default_code': properties.get('hs_sku', False),
+                            #     'price': properties.get('price') and float(properties.get('price',0)),
+                            #     'standard_price': properties.get('hs_cost_of_goods_sold') and float(properties.get('hs_cost_of_goods_sold',0)),
+                            #     'type':'product',
+                            #     'hubspot_lineitem_id': False,
+                            #     'hubspot_product_id': properties.get('hs_object_id'),
+                            #     'hubspot_product_synchronized': True,
+                            #     'hubspot_write_date': fecha_modificacion,
+                            # })
+                            process_message = "Producto no encontrado: {0}".format(properties.get('hs_object_id'))
                             hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
-                            self.env['hubspot.creation.log'].data_create(product_id=product_template.product_variant_id.id)
+                            #self.env['hubspot.creation.log'].data_create(product_id=product_template.product_variant_id.id)
                         else:
                             super(ProductTemplate_HubSpot, product_template).write({
                                 'price': properties.get('price') and float(properties.get('price',0)),
@@ -168,7 +168,7 @@ class ProductTemplate_HubSpot(models.Model):
     def hubsport_to_odoo_import_product_single(self, hubspot_operation, hubspot_crm, hubspot_lineitem_id, order_id):
         self._cr.commit()
         try:
-            parameters = {"limit":"50","archived":"false","properties":"hs_object_id,hs_product_id,name,quantity,price"}
+            parameters = {"limit":"50","archived":"false","properties":"hs_object_id,hs_product_id,name,description,hs_sku,quantity,price,hs_cost_of_goods_sold"}
             response_status, response_data = hubspot_crm.send_get_request_from_odoo_to_hubspot("GET",("objects/line_items/%s" % hubspot_lineitem_id), parameters)
             if response_status:
                 
@@ -184,25 +184,41 @@ class ProductTemplate_HubSpot(models.Model):
                         hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
                         return product_product
                     else:
-                        if hubspot_crm.product_create:
-                            fecha_modificacion = response_data.get('properties').get('hs_lastmodifieddate')
-                            fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
+                        product_product = self.env['product.template'].search([('default_code', '=', response_data.get('properties').get('hs_sku',False))], limit=1)
+                        fecha_modificacion = response_data.get('properties').get('hs_lastmodifieddate')
+                        fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
 
-                            product_product = self.env['product.template'].create({
-                                'name': response_data.get('properties').get('name'),
-                                'type':'product',
-                                'hubspot_lineitem_id': response_data.get('properties').get('hs_object_id', False),
-                                'hubspot_product_id': response_data.get('properties').get('hs_product_id', False),
+                        if product_product:
+                            super(ProductTemplate_HubSpot, product_product).write({
+                                'price': response_data.get('properties').get('price') and float(response_data.get('properties').get('price',0)),
+                                'hubspot_lineitem_id': False,
+                                'hubspot_product_id': response_data.get('properties').get('hs_object_id'),
                                 'hubspot_product_synchronized': True,
-                                'hubspot_write_date': fecha_modificacion
+                                'hubspot_write_date': fecha_modificacion,
                             })
-                            process_message = "Producto Creado: {0}".format(product_product.name)
+                            process_message = "Producto Actualizado: {0}".format(product_product.name)
                             hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
-                            self.env['hubspot.creation.log'].data_create(product_id=product_product.product_variant_id.id, sale_order_id=order_id.id)
-                            return product_product
                         else:
-                            process_message = "Producto no encontrado {0}{1}".format(response_data.get('properties').get('hs_product_id',False), response_data.get('id'))
-                            hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, True, process_message)
+                            if hubspot_crm.product_create:
+                                product_product = self.env['product.template'].create({
+                                    'name': response_data.get('properties').get('name'),
+                                    'description_sale': response_data.get('properties').get('description', False),
+                                    'default_code': response_data.get('properties').get('hs_sku', False),
+                                    'price': response_data.get('properties').get('price') and float(response_data.get('properties').get('price',0)),
+                                    'standard_price': response_data.get('properties').get('hs_cost_of_goods_sold') and float(response_data.get('properties').get('hs_cost_of_goods_sold',0)),
+                                    'type':'product',
+                                    'hubspot_lineitem_id': response_data.get('properties').get('hs_object_id', False),
+                                    'hubspot_product_id': response_data.get('properties').get('hs_product_id', False),
+                                    'hubspot_product_synchronized': True,
+                                    'hubspot_write_date': fecha_modificacion
+                                })
+                                process_message = "Producto Creado: {0}".format(product_product.name)
+                                hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
+                                self.env['hubspot.creation.log'].data_create(product_id=product_product.product_variant_id.id, sale_order_id=order_id.id)
+                                return product_product
+                            else:
+                                process_message = "Producto no encontrado {0}{1}".format(response_data.get('properties').get('hs_product_id',False), response_data.get('id'))
+                                hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, True, process_message)
             else:
                 process_message = "Error en la respuesta de importación de producto {}".format(response_data)
                 hubspot_crm.create_hubspot_operation_detail('product','import','',response_data,hubspot_operation,True,process_message)
