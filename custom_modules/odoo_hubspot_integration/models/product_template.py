@@ -184,6 +184,7 @@ class ProductTemplate_HubSpot(models.Model):
                         hubspot_crm.create_hubspot_operation_detail('product', 'import', False, response_data, hubspot_operation, False, process_message)
                         return product_product
                     else:
+                        _logger.info(response_data.get('properties').get('hs_sku'))
                         product_template = self.env['product.template'].search([('default_code', '=', response_data.get('properties').get('hs_sku'))], limit=1)
                         fecha_modificacion = response_data.get('properties').get('hs_lastmodifieddate')
                         fecha_modificacion = hubspot_crm.convert_date_iso_format(fecha_modificacion)
@@ -202,6 +203,10 @@ class ProductTemplate_HubSpot(models.Model):
                             if hubspot_crm.product_create:
                                 product_product = self.env['product.template'].create({
                                     'name': response_data.get('properties').get('name'),
+                                    'description_sale': response_data.get('properties').get('description', False),
+                                    'default_code': response_data.get('properties').get('hs_sku', False),
+                                    'price': response_data.get('properties').get('price') and float(response_data.get('properties').get('price',0)),
+                                    'standard_price': response_data.get('properties').get('hs_cost_of_goods_sold') and float(response_data.get('properties').get('hs_cost_of_goods_sold',0)),
                                     'type':'product',
                                     'hubspot_lineitem_id': response_data.get('properties').get('hs_object_id', False),
                                     'hubspot_product_id': response_data.get('properties').get('hs_product_id', False),
