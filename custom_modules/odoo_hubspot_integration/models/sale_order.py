@@ -146,16 +146,27 @@ class SaleOrder_HubSpot(models.Model):
         else:
             if data_asociation.get('properties', False) and data_asociation.get('properties').get('hubspot_owner_id', False):
                 owner_id = self.env['res.users'].search([('email','=',data_asociation.get('email')),('groups_id','=',8)], limit=1)
-            
+            if not contact:
+                order_message = "El comercial %s del negocio %s no se pudo emparejar" % (data_asociation.get('email'), order_id)
+                hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
+                toReturn = False
+
             if data_asociation.get("companies", False) and data_asociation.get("companies").get("results"):
                 contact = self.env['res.partner'].get_company_data_from_hubspot(hubspot_operation, hubspot_crm, data_asociation.get("companies").get("results")[0].get("id"))
             if not contact:
-                
                 toReturn = False
 
             if data_asociation.get("line items") is None or data_asociation.get("line items").get("results", False) == False:
-                order_message = "El negocio %s no tiene una lineas de venta" % order_id
+                order_message = "El negocio %s no tiene lineas de detalle" % order_id
                 hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
                 toReturn = False
+            elif len(data_asociation.get("line items")) > 0:
+                for line in data_asociation.get("line items").get("results"):
+                    if line.get('id'):
+                        product_id = self.env['product.template'].hubsport_to_odoo_import_product_single(hubspot_operation, hubspot_crm, line.get('id'), order_id)
+                        if not product_id:
+                            order_message = "La linea de venta %s no puede emparejar el producto con odoo" % line.get('id')
+                            hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
+                            toReturn = False
 
         return owner_id, contact, toReturn
