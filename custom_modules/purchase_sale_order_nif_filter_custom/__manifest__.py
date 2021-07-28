@@ -7,10 +7,11 @@
     "description": "Filtro personalizado de busqueda de pedido de venta y pedido de compra por NIF(VAT) y Nombre de cliente.",
     "author": "Develoop Software",
     "website": "https://www.develoop.net",
-    'depends': ['base', 'sale'],
+    'depends': ['base', 'sale', 'purchase', 'account'],
     'data': [
         'views/sale_order_nif_filter_view.xml',
-        'views/purchase_order_nif_filter_view.xml'
+        'views/purchase_order_nif_filter_view.xml',
+        'views/contact_nif_filter_view.xml'
     ],
     "images": ['static/description/icon.png'],
     'auto_install': False,
