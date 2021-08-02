@@ -91,7 +91,7 @@ class SaleOrder_HubSpot(models.Model):
             'partner_invoice_id': contact.id,
             'partner_shipping_id': contact.id,
             'date_order': date_add,
-            'user_id': user_id,
+            'user_id': user_id.id,
             'hubspot_order_id': order.get('id'),
             'hubspot_order_imported': True,
             'hubspot_pipeline_id': pipeline.id,
