@@ -48,7 +48,7 @@ class SaleOrder_HubSpot(models.Model):
                                 if(deal_response_status and deal_resp_data):
                                     res_data_asociate = deal_resp_data.get("associations")
 
-                                    owner_id, contact, _isValid = self.isOrder_Valid(res_data_asociate, order.get('id'), hubspot_crm, hubspot_operation, order_response_data)
+                                    owner_id, contact, _isValid = self.isOrder_Valid(deal_resp_data, order.get('id'), hubspot_crm, hubspot_operation)
                                     if _isValid == False:
                                         continue
                                     
@@ -91,7 +91,7 @@ class SaleOrder_HubSpot(models.Model):
             'partner_invoice_id': contact.id,
             'partner_shipping_id': contact.id,
             'date_order': date_add,
-            'user_id': user_id,
+            'user_id': user_id.id,
             'hubspot_order_id': order.get('id'),
             'hubspot_order_imported': True,
             'hubspot_pipeline_id': pipeline.id,
@@ -135,20 +135,21 @@ class SaleOrder_HubSpot(models.Model):
                 return response_data
         return False
 
-    def isOrder_Valid(self, data_asociation, order_id, hubspot_crm, hubspot_operation, order_response_data):
+    def isOrder_Valid(self, deal_resp_data, order_id, hubspot_crm, hubspot_operation):
         toReturn = True
         owner_id = contact = False
+        data_asociation = deal_resp_data.get("associations")
 
         if data_asociation is None:
             order_message = "El negocio %s no tiene asociaciones" % order_id
-            hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
+            hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, deal_resp_data, hubspot_operation, False, order_message)
             toReturn = False
         else:
-            if data_asociation.get('properties', False) and data_asociation.get('properties').get('hubspot_owner_id', False):
-                owner_id = self.env['res.users'].search([('email','=',data_asociation.get('email')),('groups_id','=',8)], limit=1)
-            if not contact:
-                order_message = "El comercial %s del negocio %s no se pudo emparejar" % (data_asociation.get('email'), order_id)
-                hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
+            if deal_resp_data.get('properties', False) and deal_resp_data.get('properties').get('hubspot_owner_id', False):
+                owner_id = self.env['res.users'].get_user_data_from_hubspot(hubspot_crm, deal_resp_data.get('properties').get('hubspot_owner_id'))
+            if not owner_id:
+                order_message = "El comercial del negocio %s no se pudo emparejar" % (order_id)
+                hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, deal_resp_data, hubspot_operation, False, order_message)
                 toReturn = False
 
             if data_asociation.get("companies", False) and data_asociation.get("companies").get("results"):
@@ -158,7 +159,7 @@ class SaleOrder_HubSpot(models.Model):
 
             if data_asociation.get("line items") is None or data_asociation.get("line items").get("results", False) == False:
                 order_message = "El negocio %s no tiene lineas de detalle" % order_id
-                hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
+                hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, deal_resp_data, hubspot_operation, False, order_message)
                 toReturn = False
             elif len(data_asociation.get("line items")) > 0:
                 for line in data_asociation.get("line items").get("results"):
@@ -166,7 +167,7 @@ class SaleOrder_HubSpot(models.Model):
                         product_id = self.env['product.template'].hubsport_to_odoo_import_product_single(hubspot_operation, hubspot_crm, line.get('id'), order_id)
                         if not product_id:
                             order_message = "La linea de venta %s no puede emparejar el producto con odoo" % line.get('id')
-                            hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, order_response_data, hubspot_operation, False, order_message)
+                            hubspot_crm.create_hubspot_operation_detail('order', 'import', hubspot_operation, deal_resp_data, hubspot_operation, False, order_message)
                             toReturn = False
 
         return owner_id, contact, toReturn
