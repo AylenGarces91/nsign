@@ -263,7 +263,7 @@
            <t t-foreach="docs" t-as="o">
                 <t t-if="o.partner_id.x_reseller" t-set="reseller" t-value="true"/>
                 <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
-                <t t-call="account_reports_custom.report_invoice_document_custom" t-lang="lang"/>
+                <t t-call="account_print_reports_custom.report_invoice_document_custom" t-lang="lang"/>
             </t>
         </t>
     </template>

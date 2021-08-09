@@ -4,8 +4,8 @@
         id="report_sale_order_custom_print"
         model="sale.order"
         string="PRO-FORMA Factura"
-        name="account_reports_custom.report_sale_order_custom"
-        file="account_reports_custom.report_sale_order_custom"
+        name="account_print_reports_custom.report_sale_order_custom"
+        file="account_print_reports_custom.report_sale_order_custom"
         report_type="qweb-pdf"
         print_report_name="'PRO-FORMA - %s' % (object.name)" 
     />

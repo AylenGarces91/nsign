@@ -196,7 +196,7 @@
         <t t-call="web.html_container">
             <t t-set="is_pro_forma" t-value="True"/>
             <t t-foreach="docs" t-as="doc">
-                <t t-call="account_reports_custom.report_sale_order_document_custom" t-lang="doc.partner_id.lang"/>
+                <t t-call="account_print_reports_custom.report_sale_order_document_custom" t-lang="doc.partner_id.lang"/>
             </t>
         </t>
     </template>
