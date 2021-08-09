@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <report
+        id="report_invoice_custom_print"
+        model="account.move"
+        string="Facturas"
+        name="account_reports_custom.report_invoice_custom"
+        file="account_reports_custom.report_invoice_custom"
+        report_type="qweb-pdf"
+    />
+</odoo>
