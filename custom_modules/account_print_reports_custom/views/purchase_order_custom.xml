@@ -18,6 +18,15 @@
 
                 </t>
             </t>
+            <t t-else="">
+                <t t-set="information_block">
+                    <strong>Dirección de Envío:</strong>
+                    <div t-if="o.picking_type_id and o.picking_type_id.warehouse_id">
+                        <span t-field="o.picking_type_id.warehouse_id.name"/>
+                        <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                    </div>
+                </t>
+            </t>
             <div class="page">
                 <div class="oe_structure"/>
                 <h2 t-if="o.state == 'draft'">Solicitud de presupuesto #<span t-field="o.name"/></h2>
