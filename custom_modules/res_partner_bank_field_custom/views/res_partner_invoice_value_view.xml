@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="bank_value_view_form_custom" model="ir.ui.view">
+        <field name="name">bank.value.view.form.view.custom</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
+                <field name="x_is_own_bank_value" string="Es banco propio" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
