@@ -52,7 +52,7 @@
                 <table class="table table-sm o_main_table">
                     <thead>
                         <tr>
-                            <th name="th_description_sku"><strong>Reference</strong></th>
+                            <th name="th_description_sku"><strong>Referencia</strong></th>
                             <th name="th_description"><strong>Descripción</strong></th>
                             <th name="th_quantity" class="text-right"><strong>Cant</strong></th>
                             <th name="th_price_unit" class="text-right"><strong>Precio Unidad</strong></th>

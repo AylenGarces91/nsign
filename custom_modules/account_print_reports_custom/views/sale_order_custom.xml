@@ -41,7 +41,7 @@
                         <p class="m-0" t-field="doc.client_order_ref"/>
                     </div>
                     <div t-if="doc.date_order and doc.state not in ['draft','sent']" class="col-auto mw-100 mb-2">
-                        <strong>Fecha orden:</strong>
+                        <strong>Fecha de pedido:</strong>
                         <p class="m-0" t-field="doc.date_order"/>
                     </div>
                     <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-auto mw-100 mb-2">
@@ -62,7 +62,7 @@
                 <table class="table table-sm o_main_table">
                     <thead>
                         <tr>
-                            <th name="th_description_sku" class="text-left">Reference</th>
+                            <th name="th_description_sku" class="text-left">Referencia</th>
                             <th name="th_description" class="text-left">Descripción</th>
                             <th name="th_quantity" class="text-right">Cantidad</th>
                             <th name="th_priceunit" class="text-right">Precio unitario</th>

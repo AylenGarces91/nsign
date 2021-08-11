@@ -76,7 +76,7 @@
                         <span t-if="o.name != '/'" t-field="o.name"/>
                     </h2>
                     <div class="col-auto mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
-                        <strong>Fecha factura:</strong>
+                        <strong>Fecha de factura:</strong>
                         <p t-if="o.partner_id.lang == 'es_ES'" class="m-0" t-field="o.invoice_date" t-options="{&quot;format&quot;: &quot;dd/MM/yyyy&quot;}"/>
                         <p t-if="o.partner_id.lang == 'en_US'" class="m-0" t-field="o.invoice_date" t-options="{&quot;format&quot;: &quot;yyyy/MM/dd&quot;}"/>
                     </div>
@@ -224,7 +224,7 @@
                     </t>
                     <t t-else="">    
                         <p t-if="'Transferencia' in o.invoice_payment_term_id.name or 'Transfer' in o.invoice_payment_term_id.name">
-                            Bankinter - IBAN ES59-0128-0516-4805-0000-0975             
+                            BANKINTER - IBAN ES59 0128 0516 4805 0000 0975 BIC/SWIFT BKBKESMMXXX            
                         </p>   
                     </t>                   
                 
