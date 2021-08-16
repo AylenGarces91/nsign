@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="custom_search_template" inherit_id="account_reports.search_template_extra_options">
+            <xpath expr="//div[1]" position="inside">
+                <a role="menuitem" class="dropdown-item js_account_report_bool_filter" t-if="options.get('group_company') != None" title="Company group" data-filter="group_company">Agrupar por Empresa</a>
+            </xpath>
+        </template>
+    </data>
+</odoo>

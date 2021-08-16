@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <report
+        id="report_purchase_order_custom_print" 
+        model="purchase.order"
+        string="Pedido de Compra"
+        name="account_print_reports_custom.report_purchase_order_custom"
+        file="account_print_reports_custom.report_purchase_order_custom"
+        report_type="qweb-pdf"
+        print_report_name="(object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or
+                'Purchase Order - %s' % (object.name))"
+        />
+</odoo>
+ <!-- id="action_report_purchase_order" -->
+ 

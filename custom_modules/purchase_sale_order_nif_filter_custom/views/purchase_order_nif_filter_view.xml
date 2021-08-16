@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <record id="purchase_order_nif_filter_search_view_custom" model="ir.ui.view">
+            <field name="name">purchase.order.nif.filter.search.view.custom</field>
+            <field name="model">purchase.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="x_purchase_order_nif_filter" filter_domain="['|', ('partner_id.name', 'ilike', self), ('partner_id.vat', '=', self)]" string="Nombre cliente o nif" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
