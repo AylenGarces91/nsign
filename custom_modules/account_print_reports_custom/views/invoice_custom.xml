@@ -218,14 +218,13 @@
                 </p>
                 
                 <t t-if="o.invoice_payment_term_id">
-                    <t t-set="banco" t-value="o.partner_id.bank_ids.filtered(lambda bank: bank.x_is_own_bank_value==True)"/>
-                    <t t-if="banco">
-                        <p><span t-esc="banco[0].acc_number"></span></p>
+                    <t t-if="o.partner_id.x_is_own_bank_value">
+                        <p><span t-esc="o.partner_id.x_is_own_bank_value"/></p>
                     </t>
-                    <t t-else="">    
+                    <t t-else="!o.partner_id.x_is_own_bank_value">    
                         <p t-if="'Transferencia' in o.invoice_payment_term_id.name or 'Transfer' in o.invoice_payment_term_id.name">
-                            BANKINTER - IBAN ES59 0128 0516 4805 0000 0975 BIC/SWIFT BKBKESMMXXX            
-                        </p>   
+                          BANKINTER - IBAN ES59 0128 0516 4805 0000 0975 BIC/SWIFT BKBKESMMXXX                
+                        </p>  
                     </t>                   
                 
                     <p t-if="'Domiciliado' in o.invoice_payment_term_id.name or 'Domiciled' in o.invoice_payment_term_id.name">
