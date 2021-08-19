@@ -10,7 +10,8 @@
     "website": "https://www.develoop.net",
     'depends': ['base', 'sale'],
     'data': [
-        'views/res_partner_invoice_value_view.xml'
+        'views/res_partner_bank_value_view.xml',
+        'views/res_partner_bank_select_view.xml'
     ],
     "images": ['static/description/icon.png'],
     'auto_install': False,
