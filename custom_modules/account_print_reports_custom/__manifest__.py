@@ -13,6 +13,7 @@
         'views/sale_order_custom.xml',
         'views/report_purchase_order_custom.xml',
         'views/purchase_order_custom.xml',
+        'reports/report.xml',
     ],
     'author': 'Develoop Software',
     'images': ['static/description/icon.png'],
