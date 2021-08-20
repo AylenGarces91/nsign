@@ -3,12 +3,12 @@
 	<template id="report_invoice_document_custom">
         <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)" />
-            <!-- <t t-set="address">
+            <!--<t t-set="address">
                 <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                 <div t-if="o.partner_id.vat" class="mt16">
                     <t t-if="o.company_id.country_id.vat_label" t-esc="o.company_id.country_id.vat_label" id="inv_tax_id_label"/>
                     <t t-else="">NIF</t>: <span t-field="o.partner_id.vat"/></div>
-            </t> -->
+            </t>-->
             <div class="row">
                 <div class="col-6">
                     <div t-if="o.partner_id">
@@ -215,8 +215,7 @@
                 </p>-->
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     Forma de pago: <span t-field="o.invoice_payment_term_id"/>
-                </p>
-                
+                </p>                
                 <t t-if="o.invoice_payment_term_id">
                     <t t-if="o.partner_id.x_select_own_bank_values">
                         <p><span t-esc="o.partner_id.x_select_own_bank_values.bank_acc_number"/></p>
