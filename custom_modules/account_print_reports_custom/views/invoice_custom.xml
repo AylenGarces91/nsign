@@ -219,7 +219,7 @@
                 
                 <t t-if="o.invoice_payment_term_id">
                     <t t-if="o.partner_id.x_select_own_bank_values">
-                        <p><span t-esc="o.partner_id.x_select_own_bank_values.acc_number"/></p>
+                        <p><span t-esc="o.partner_id.x_select_own_bank_values.bank_acc_number"/></p>
                     </t>
                     <t t-else="!o.partner_id.x_select_own_bank_values">    
                         <p t-if="'Transferencia' in o.invoice_payment_term_id.name or 'Transfer' in o.invoice_payment_term_id.name">
