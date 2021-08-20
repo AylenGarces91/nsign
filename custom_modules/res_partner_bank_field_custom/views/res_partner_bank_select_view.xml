@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='accounting']/group[1]/group[@name='banks']/field[@name='bank_ids']" position="before">
                 <group class="o_group o_field_widget o_group_col_12">
-                    <field name="x_select_own_bank_values" string="Banco propio" domain="[('partner_id', '=', id), ('x_is_own_bank_value', '=', True)]"/>
+                    <field name="x_select_own_bank_values" string="Banco propio"/>
                 </group>
             </xpath>
         </field>

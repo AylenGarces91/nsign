@@ -5,5 +5,6 @@ from odoo import api, fields, models
 
 class ResPartnerCustom(models.Model):
     _inherit = 'res.partner'
-
-    x_select_own_bank_values = fields.Many2one('res.partner.bank', string="Banco propio")
+        
+    #     return bank_list
+    x_select_own_bank_values = fields.Many2one('account.journal', string="Banco propio", domain="[('x_is_own_bank_value', '=', True)]", stored=True)   
