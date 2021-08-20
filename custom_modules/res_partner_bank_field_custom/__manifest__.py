@@ -8,9 +8,9 @@
     "description": "Nuevo campo personalizado en cuenta bancaria.",
     "author": "Develoop Software",
     "website": "https://www.develoop.net",
-    'depends': ['base', 'sale'],
+    'depends': ['base', 'sale', 'account'],
     'data': [
-        'views/res_partner_bank_value_view.xml',
+        'views/account_journal_bank_value_view.xml',
         'views/res_partner_bank_select_view.xml'
     ],
     "images": ['static/description/icon.png'],
