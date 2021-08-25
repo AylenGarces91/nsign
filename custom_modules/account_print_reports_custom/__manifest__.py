@@ -5,7 +5,7 @@
     'description': """
         Modulo personalizado de modificacion de reportes impresos de facturas, compras y ventas.
     """,
-    'depends': ['base','account', 'sale', 'purchase'],
+    'depends': ['base','account', 'sale', 'purchase','res_partner_bank_field_custom'],
     'data': [
         'views/report_invoice_custom.xml',
         'views/invoice_custom.xml',
