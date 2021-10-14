@@ -11,7 +11,7 @@
     'author': "Develoop",
     'website': "https://www.develoop.net/",
     'version': '0.1',
-    'depends': ['account_reports', 'l10n_es_aeat', 'account_accountant'],
+    'depends': ['account_reports', 'l10n_es_aeat', 'account_accountant', 'l10n_es_reports'],
     'data': [
         'views/account_menus.xml',
         'views/assets.xml',
