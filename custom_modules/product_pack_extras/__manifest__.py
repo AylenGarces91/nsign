@@ -9,7 +9,7 @@
     'description': """
         Reparticion ponderada de precios de componentes de kits de productos.
         """,
-    'depends': ['product_pack'],
+    'depends': ['sale','product_pack'],
     'data': [
         'views/product_pack_line_views.xml',
     ],
