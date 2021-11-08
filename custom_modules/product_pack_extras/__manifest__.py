@@ -12,6 +12,7 @@
     'depends': ['sale','product_pack'],
     'data': [
         'views/product_pack_line_views.xml',
+        'views/saleorder_document_custom.xml',
     ],
     'demo': [],
     'installable': True,
