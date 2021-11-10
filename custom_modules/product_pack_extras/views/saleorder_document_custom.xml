@@ -1,9 +1,9 @@
 <odoo>
     <data>
-        <!--template id="report_product_pack_sale" inherit_id="sale.report_saleorder_document_custom"-->
-        <template id="report_product_pack_sale" inherit_id="sale.report_saleorder_document">
+        <template id="report_product_pack_sale" inherit_id="sale.report_saleorder_document_custom">
+        <!--template id="report_product_pack_sale" inherit_id="sale.report_saleorder_document"-->
             <xpath expr="//tbody[@class='sale_tbody']" position="replace">
-                <tbody class="sale_tbody">
+                <!--tbody class="sale_tbody">
 
                     <t t-set="current_subtotal" t-value="0"/>
 
@@ -61,10 +61,10 @@
                             </tr>
                         </t>
                     </t>
-                </tbody>
+                </tbody-->
                 
                 <!-- Community edition -->
-                <!--tbody class="sale_tbody">
+                <tbody class="sale_tbody">
                 
                     <t t-set="current_subtotal" t-value="0"/>
                     <t t-foreach="doc.order_line" t-as="line">
@@ -125,7 +125,7 @@
                             </tr>
                         </t>
                     </t>
-                </tbody-->
+                </tbody>
             </xpath>
         </template>
     </data>
