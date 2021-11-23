@@ -1,6 +1,6 @@
 <odoo>
     <data>
-        <template id="report_product_pack_sale" inherit_id="account_print_reports_custom.report_saleorder_document_custom">
+        <template id="report_product_pack_sale" inherit_id="account_print_reports_custom.report_sale_order_document_custom">
         <!--template id="report_product_pack_sale" inherit_id="sale.report_sale_order_document_custom"-->
             <xpath expr="//tbody[@class='sale_tbody']" position="replace">
         
