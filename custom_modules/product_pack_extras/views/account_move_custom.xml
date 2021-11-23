@@ -22,14 +22,21 @@
                                     <span t-field="line.quantity" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 0}"/>
                                 </td>
                                 <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                    <span class="text-nowrap" t-field="line.price_unit"/>
+                                    <span t-if="line.price_pack == 0" class="text-nowrap" t-field="line.price_unit"/>
+                                    <span t-if="line.price_pack != 0" class="text-nowrap" t-field="line.price_pack"/>
                                 </td>
                                 <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                     <span class="text-nowrap" t-field="line.discount"/>
                                 </td>
                                 <td class="text-right">
-                                    <span class="text-nowrap" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                    <span class="text-nowrap" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                                    <t t-if="line.price_pack == 0">
+                                        <span class="text-nowrap" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                        <span class="text-nowrap" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                                    </t>
+                                    <t t-if="line.price_pack != 0">
+                                        <span class="text-nowrap" t-field="line.price_pack_subtotal"/>
+                                    </t>
+                                    
                                 </td>
                             </t>
                             <t t-if="line.display_type == 'line_section'">
