@@ -12,6 +12,8 @@ class AccountMoveLine(models.Model):
                                           'order_line_id',
                                           string='Sale Lines',
                                           copy=False)
+    price_pack_subtotal = fields.Monetary('pack Subtotal', compute='_compute_pack_prices')
+    price_pack = fields.Monetary('pack Price', compute='_compute_pack_prices')
 
     def _compute_pack_parent(self):
         for line in self:
@@ -21,3 +23,14 @@ class AccountMoveLine(models.Model):
                     is_packdetail = True
                     break
             line.is_packdetail = is_packdetail
+
+    def _compute_pack_prices(self):
+        for line in self:
+            price_pack_subtotal, price_pack = 0, 0
+            for sale_line in line.pack_sale_line_ids:
+                if sale_line.price_pack:
+                    price_pack_subtotal = sale_line.price_pack_subtotal
+                    price_pack = sale_line.price_pack
+                    break
+            line.price_pack = price_pack
+            line.price_pack_subtotal = price_pack_subtotal
