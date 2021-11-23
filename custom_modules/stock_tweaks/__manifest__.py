@@ -11,7 +11,8 @@
     'website': 'https://www.develoop.net',
     'depends': ['base', 'stock'],
     'data': [
-        'views/stock_picking_views.xml'
+        'views/stock_picking_views.xml',
+        'reports/report_value_picking.xml'
     ],
     'demo': [
     ],
