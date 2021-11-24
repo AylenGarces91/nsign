@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_sale_subscription_doc">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="row">
+                                
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <report string="Subscripcion" id="action_report_dev_subscription" model="sale.subscription" report_type="qweb-pdf" name="dev_subscription_print.report_sale_subscription_doc" file="dev_subscription_print.report_sale_subscription_doc" print_report_name="'Subscription - %s - %s' % (object.partner_id.name or '', object.name)" />
+    </data>
+</odoo>
