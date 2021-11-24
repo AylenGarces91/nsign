@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_sale_subscription_doc">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="row col-12">
+                                <div class="col-6">
+                                    <br />
+                                    <h1 t-field="o.name" class="mt0 float-left"/>
+                                </div>
+                                <div class="col-6">
+                                </div>
+                            </div>
+                            <div class="row col-12">
+                                <div class="col-6">
+                                    <div t-if="o.partner_id" class="col-auto" name="div_partner">
+                                        <strong>Cliente:</strong>
+                                        <p t-field="o.partner_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div t-if="o.template_id" class="col-auto" name="div_template">
+                                        <strong>Plantilla Suscripción:</strong>
+                                        <p t-field="o.template_id"/>
+                                    </div>
+                                    <div class="row col-12">
+                                        <div t-if="o.date_start" class="col-6" name="div_datestart">
+                                            <strong>Fecha de inicio:</strong>
+                                            <p t-field="o.date_start"/>
+                                        </div>
+                                        <div t-if="o.recurring_next_date" class="col-6" name="div_datenext">
+                                            <strong>Fecha próxima factura:</strong>
+                                            <p t-field="o.recurring_next_date"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <table class="table">
+                                    <thead>
+                                        <th>Producto</th>
+                                        <th>Descripción</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio </th>
+                                        <th>Desc </th>
+                                        <th>Subtotal</th>
+                                    </thead>
+                                    <tbody name="tbody_lines">
+                                        <tr t-foreach="o.recurring_invoice_line_ids" t-as="line">
+                                            <td>
+                                                <span t-field="line.product_id.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.quantity"/>
+                                                <small t-if="line.uom_id" t-field="line.uom_id.name" />
+                                            </td>
+                                            <td>
+                                                <span t-field="line.price_unit"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.discount"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.price_subtotal"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5"></td>
+                                            <td>
+                                                <strong>
+                                                    <span t-field="o.recurring_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}" />
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <report string="Subscripcion" id="action_report_dev_subscription" model="sale.subscription" report_type="qweb-pdf" name="dev_subscription_print.report_sale_subscription_doc" file="dev_subscription_print.report_sale_subscription_doc" print_report_name="'Subscription - %s - %s' % (object.partner_id.name or '', object.name)" />
+    </data>
+</odoo>
