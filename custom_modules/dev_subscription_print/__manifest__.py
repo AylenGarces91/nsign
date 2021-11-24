@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Imprimir Subscripciones',
+    'name': 'Imprimir Suscripciones',
     'version': '1.1',
     'summary': 'Report para subscripciones',
     'description': """
