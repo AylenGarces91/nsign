@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div t-if="o.template_id" class="col-auto" name="div_template">
-                                        <strong>Plantilla Subscripción:</strong>
+                                        <strong>Plantilla Suscripción:</strong>
                                         <p t-field="o.template_id"/>
                                     </div>
                                     <div class="row col-12">
