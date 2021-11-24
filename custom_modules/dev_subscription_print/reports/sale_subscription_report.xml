@@ -70,14 +70,6 @@
                                                 <span t-field="line.price_subtotal"/>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td colspan="5"></td>
-                                            <td>
-                                                <strong>
-                                                    <span t-field="o.recurring_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}" />
-                                                </strong>
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
