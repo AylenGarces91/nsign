@@ -67,7 +67,7 @@
                                                 <span t-field="line.discount"/>
                                             </td>
                                             <td>
-                                                <span t-field="line.price_subtotal"/>
+                                                <span t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                             </td>
                                         </tr>
                                     </tbody>
