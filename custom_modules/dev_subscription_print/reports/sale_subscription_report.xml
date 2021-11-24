@@ -86,6 +86,6 @@
                 </t>
             </t>
         </template>
-        <report string="Subscripcion" id="action_report_dev_subscription" model="sale.subscription" report_type="qweb-pdf" name="dev_subscription_print.report_sale_subscription_doc" file="dev_subscription_print.report_sale_subscription_doc" print_report_name="'Subscription - %s - %s' % (object.partner_id.name or '', object.name)" />
+        <report string="Suscripción" id="action_report_dev_subscription" model="sale.subscription" report_type="qweb-pdf" name="dev_subscription_print.report_sale_subscription_doc" file="dev_subscription_print.report_sale_subscription_doc" print_report_name="'Subscription - %s - %s' % (object.partner_id.name or '', object.name)" />
     </data>
 </odoo>
