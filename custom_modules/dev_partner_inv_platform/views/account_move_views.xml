@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <record id="dev_account_move_form_inh" model="ir.ui.view">
+            <field name="name">dev.account.move.form.inh</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="dev_partner_invoices_platform" attrs="{'invisible': [('type', '!=', 'out_invoice')]}" />
+                    <field name="dev_sent_platform" attrs="{'invisible': ['|', ('type', '!=', 'out_invoice'), ('dev_partner_invoices_platform', 'in', [None, ''])]}" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
