@@ -218,10 +218,20 @@
                 </p>
                 
                 <t t-if="o.invoice_payment_term_id">
-                    <t t-if="o.partner_id.x_select_own_bank_values">
-                        <p><span t-esc="o.partner_id.x_select_own_bank_values.bank_id.name"/> - <span t-esc="o.partner_id.x_select_own_bank_values.bank_acc_number"/> - <span t-esc="o.partner_id.x_select_own_bank_values.bank_id.bic"/></p>
+                    <t t-if="o.partner_id">
+                        <t t-if="o.partner_id.x_select_own_bank_values">
+                            <p><span t-esc="o.partner_id.x_select_own_bank_values.bank_id.name"/> - <span t-esc="o.partner_id.x_select_own_bank_values.bank_acc_number"/> - <span t-esc="o.partner_id.x_select_own_bank_values.bank_id.bic"/></p>
+                        </t>
+                        <t t-elif="o.partner_id.parent_id and o.partner_id.parent_id.x_select_own_bank_values">
+                            <p><span t-esc="o.partner_id.parent_id.x_select_own_bank_values.bank_id.name"/> - <span t-esc="o.partner_id.parent_id.x_select_own_bank_values.bank_acc_number"/> - <span t-esc="o.partner_id.parent_id.x_select_own_bank_values.bank_id.bic"/></p>
+                        </t>
+                        <t t-else="">    
+                            <p t-if="'Transferencia' in o.invoice_payment_term_id.name or 'Transfer' in o.invoice_payment_term_id.name">
+                            BANKINTER - IBAN ES59 0128 0516 4805 0000 0975 BIC/SWIFT BKBKESMMXXX                
+                            </p>  
+                        </t>
                     </t>
-                    <t t-else="!o.partner_id.x_select_own_bank_values">    
+                    <t t-else="">    
                         <p t-if="'Transferencia' in o.invoice_payment_term_id.name or 'Transfer' in o.invoice_payment_term_id.name">
                           BANKINTER - IBAN ES59 0128 0516 4805 0000 0975 BIC/SWIFT BKBKESMMXXX                
                         </p>  
