@@ -5,7 +5,7 @@
     'description': """
         Modulo personalizado de modificacion de reportes impresos de facturas, compras y ventas.
     """,
-    'depends': ['base','account', 'sale', 'purchase'],
+    'depends': ['base','account', 'sale', 'purchase','res_partner_bank_field_custom'],
     'data': [
         'views/report_invoice_custom.xml',
         'views/invoice_custom.xml',
@@ -13,6 +13,7 @@
         'views/sale_order_custom.xml',
         'views/report_purchase_order_custom.xml',
         'views/purchase_order_custom.xml',
+        'reports/report.xml',
     ],
     'author': 'Develoop Software',
     'images': ['static/description/icon.png'],
