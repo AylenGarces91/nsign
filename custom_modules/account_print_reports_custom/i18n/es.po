@@ -300,8 +300,8 @@ msgstr "Precio unitario"
 
 #. module: account_print_reports_custom
 #: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
-msgid "Disc.%"
-msgstr "Desc.%"
+msgid "<span>Disc.%</span>"
+msgstr "<span>Desc.%</span>"
 
 #. module: account_print_reports_custom
 #: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
