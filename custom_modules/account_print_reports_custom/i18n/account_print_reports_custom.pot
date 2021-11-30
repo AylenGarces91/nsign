@@ -1,0 +1,318 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_print_reports_custom
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-01 12:32+0000\n"
+"PO-Revision-Date: 2021-12-01 12:32+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<strong>Client info:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Phone:</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Contact person:</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Invoice"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>VAT:</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Draft Invoice"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Cancelled Invoice"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Credit Note"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Vendor Credit Note"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<strong>Invoice Date:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<strong>Project:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Product</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Description</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Qty</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Dto.</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Unit Price</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Amount"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Unit Price"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "on"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<strong>Amount Total</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Please use the following communication for your payment:"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "Payment method:"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Client account:</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Due date</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Total amount</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<strong>Shipping Address:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "Request for Quotation #"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "Purchase Order #"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "Cancelled Purchase Order #"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "<strong>Purchase Representative:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "<strong>Your Order Reference:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "<strong>Order Date:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "<strong>Reference</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "<strong>Qty</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "<strong>Unit Price</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "<strong>Amount</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "<strong>Description</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_purchase_order_document_custom
+msgid "<strong>Amount Total</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Invoicing and Shipping Address:"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Invoicing Address:"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Order #"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Quotation #"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<span>Pro-Forma Invoice #</span>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<strong>Your Reference:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<strong>Date order:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<strong>Quotation Date:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<strong>Expiration:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<strong>Salesperson:</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Reference"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Description"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Quantity"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Unit Price"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Disc.%"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Amount"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "Total Price"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<strong>Signature</strong>"
+msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
+msgid "<strong>Fiscal Position Remark:</strong>"
+msgstr ""

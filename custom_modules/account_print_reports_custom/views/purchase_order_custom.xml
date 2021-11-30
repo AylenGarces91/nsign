@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
-    <template id="report_purchase_order_document_custom">
-        <t t-call="web.external_layout">
+    <template id="report_purchase_order_document_custom" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//div[@class='page']" position="replace">
             <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
             <t t-set="address">
                 <div t-field="o.partner_id"
@@ -10,7 +10,7 @@
             </t>
             <t t-if="o.dest_address_id">
                 <t t-set="information_block">
-                   	<strong>Dirección de Envío</strong>
+                   	<strong>Shipping Address:</strong>
                     <div t-if="o.dest_address_id">
                         <div t-field="o.dest_address_id"
                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
@@ -20,7 +20,7 @@
             </t>
             <t t-else="">
                 <t t-set="information_block">
-                    <strong>Dirección de Envío:</strong>
+                    <strong>Shipping Address:</strong>
                     <div t-if="o.picking_type_id and o.picking_type_id.warehouse_id">
                         <span t-field="o.picking_type_id.warehouse_id.name"/>
                         <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
@@ -29,22 +29,23 @@
             </t>
             <div class="page">
                 <div class="oe_structure"/>
-                <h2 t-if="o.state == 'draft'">Solicitud de presupuesto #<span t-field="o.name"/></h2>
-                <h2 t-if="o.state in ['sent', 'to approve']">Orden de Compra #<span t-field="o.name"/></h2>
-                <h2 t-if="o.state in ['purchase', 'done']">Orden de Compra #<span t-field="o.name"/></h2>
-                <h2 t-if="o.state == 'cancel'">Pedido de compra cancelado #<span t-field="o.name"/></h2>
+                <br />
+                <h2 t-if="o.state == 'draft'">Request for Quotation #<span t-field="o.name"/></h2>
+                <h2 t-if="o.state in ['sent', 'to approve']">Purchase Order #<span t-field="o.name"/></h2>
+                <h2 t-if="o.state in ['purchase', 'done']">Purchase Order Orden #<span t-field="o.name"/></h2>
+                <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></h2>
 
                 <div id="informations" class="row mt32 mb32">
                     <div t-if="o.user_id" class="col-3 bm-2">
-                        <strong>Representante del Proveedor:</strong>
+                        <strong>Purchase Representative:</strong>
                         <p t-field="o.user_id" class="m-0"/>
                     </div>
                     <div t-if="o.partner_ref" class="col-3 bm-2">
-                        <strong>Su referencia de pedido:</strong>
+                        <strong>Your Order Reference:</strong>
                         <p t-field="o.partner_ref" class="m-0"/>
                     </div>
                     <div t-if="o.date_order" class="col-3 bm-2">
-                        <strong>Fecha orden:</strong>
+                        <strong>Order Date:</strong>
                         <p t-field="o.date_order" class="m-0"/>
                     </div>
                 </div>
@@ -52,10 +53,10 @@
                 <table class="table table-sm o_main_table">
                     <thead>
                         <tr>
-                            <th name="th_description_sku"><strong>Referencia</strong></th>
-                            <th name="th_description"><strong>Descripción</strong></th>
-                            <th name="th_quantity" class="text-right"><strong>Cant</strong></th>
-                            <th name="th_price_unit" class="text-right"><strong>Precio Unidad</strong></th>
+                            <th name="th_description_sku"><strong>Reference</strong></th>
+                            <th name="th_description"><strong>Description</strong></th>
+                            <th name="th_quantity" class="text-right"><strong>Qty</strong></th>
+                            <th name="th_price_unit" class="text-right"><strong>Unit Price</strong></th>
                             <th name="th_amount" class="text-right"><strong>Monto</strong></th>
                         </tr>
                     </thead>
@@ -119,13 +120,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td name="td_taxes_label"><strong>Impuestos</strong></td>
+                                <td name="td_taxes_label"><strong>Taxes</strong></td>
                                 <td class="text-right">
                                     <span t-field="o.amount_tax" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
                                 </td>
                             </tr>
                             <tr class="border-black o_total">
-                                <td name="td_amount_total_label"><strong>Total</strong></td>
+                                <td name="td_amount_total_label"><strong>Amount Total</strong></td>
                                 <td class="text-right">
                                     <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
                                 </td>
@@ -137,13 +138,6 @@
                 <p t-field="o.notes"/>
                 <div class="oe_structure"/>
             </div>
-        </t>
-    </template>
-    <template id="report_purchase_order_custom">
-        <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="o">
-                <t t-call="account_print_reports_custom.report_purchase_order_document_custom" t-lang="o.partner_id.lang"/>
-            </t>
-        </t>
+        </xpath>
     </template>
 </odoo>
