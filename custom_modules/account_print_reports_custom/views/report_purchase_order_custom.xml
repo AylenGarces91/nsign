@@ -11,5 +11,4 @@
                 'Purchase Order - %s' % (object.name))"
         />
 </odoo>
- <!-- id="action_report_purchase_order" -->
  
