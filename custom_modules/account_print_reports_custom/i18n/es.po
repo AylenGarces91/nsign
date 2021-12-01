@@ -17,8 +17,8 @@ msgstr ""
 
 #. module: account_print_reports_custom
 #: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
-msgid "<strong>Client info:</strong>"
-msgstr "<strong>Datos cliente:</strong>"
+msgid "<strong>Customer</strong>"
+msgstr "<strong>Datos cliente</strong>"
 
 #. module: account_print_reports_custom
 #: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
@@ -322,3 +322,13 @@ msgstr "<strong>Firma</strong>"
 #: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_sale_order_document_custom
 msgid "<strong>Fiscal Position Remark:</strong>"
 msgstr "<strong>Posición fiscal:</strong>"
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Quantity</span>"
+msgstr "<span>Cantidad</span>"
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
+msgid "<span>Serial number</span>"
+msgstr "<span>Número de serie</span>"
