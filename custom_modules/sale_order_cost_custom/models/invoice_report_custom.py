@@ -17,4 +17,4 @@ class InvoiceReportCustom(models.Model):
         return super()._group_by() + ", invoice_product.id, ptemp.id, prop.id"
 
     def _from(self):
-        return super()._from() + " LEFT JOIN product_product invoice_product ON invoice_product.id = line.product_id LEFT JOIN product_template AS ptemp ON invoice_product.product_tmpl_id = ptemp.id LEFT JOIN ir_property prop on prop.res_id = 'product.product, || invoice_product.id'" 
+        return super()._from() + " LEFT JOIN product_product invoice_product ON invoice_product.id = line.product_id LEFT JOIN product_template AS ptemp ON invoice_product.product_tmpl_id = ptemp.id LEFT JOIN ir_property prop on prop.res_id = 'product.product,' || invoice_product.id" 
