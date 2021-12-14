@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="product_pack_line_tree_inh" model="ir.ui.view">
+            <field name="name">product.pack.line.tree.inh</field>
+            <field name="model">product.pack.line</field>
+            <field name="inherit_id" ref="product_pack.product_pack_line_tree" />
+            <field name="arch" type="xml">
+                <field name="quantity" position="before">
+                    <field name="extra_price_unit" />
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
