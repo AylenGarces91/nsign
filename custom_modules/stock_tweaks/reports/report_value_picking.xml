@@ -93,7 +93,7 @@
                                             <strong>Precio U.</strong>
                                         </th>
                                         <th t-if="total_discount != 0">
-                                            <strong>Descuento</strong>
+                                            <strong>Descuento %</strong>
                                         </th>
                                         <th>
                                             <strong>Subtotal</strong>
@@ -134,11 +134,13 @@
                                                     <span t-if="move.purchase_line_id" t-field="move.purchase_line_id.sudo().price_unit" />
                                                 </td>
                                                 <td t-if="total_discount != 0">
-                                                    <t t-if="move.sale_line_id.discount != 0">
-                                                        <t t-set="qty" t-value="ml.qty_done if o.state=='done' else ml.product_uom_qty" />
+                                                    <span t-if="move.sale_line_id" t-field="move.sale_line_id.sudo().discount" />
+                                                    <!-- <span t-if="move.purchase_line_id" t-field="move.purchase_line_id.sudo().price_unit" /> -->
+                                                    <!-- <t t-if="move.sale_line_id.discount != 0"> -->
+                                                        <!-- <t t-set="qty" t-value="ml.qty_done if o.state=='done' else ml.product_uom_qty" />
                                                         <t t-set="price_discount" t-value="move.sale_line_id.sudo().price_unit * (move.sale_line_id.sudo().discount/100)" />
-                                                        <span t-esc="qty * price_discount" />
-                                                    </t>
+                                                        <span t-esc="qty * price_discount" /> -->
+                                                    <!-- </t> -->
                                                 </td>
                                                 <td>
                                                     <span t-if="move.sale_line_id" t-field="move.sale_line_id.sudo().price_subtotal" />
