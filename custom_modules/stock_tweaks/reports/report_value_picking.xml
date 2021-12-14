@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="col-auto" name="div_sched_date">
                                     <strong>Fecha agendada:</strong>
-                                    <p t-field="o.scheduled_date"/>
+                                    <p t-field="o.scheduled_date" t-options="{&quot;format&quot;: &quot;dd/MM/yyyy&quot;}"/>
                                 </div>
                             </div>
 
@@ -98,12 +98,12 @@
                                         <th>
                                             <strong>Subtotal</strong>
                                         </th>
-                                        <th name="th_from" t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations">
+                                        <!-- <th name="th_from" t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations">
                                             <strong>De</strong>
                                         </th>
                                         <th name="th_to" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                             <strong>a</strong>
-                                        </th>
+                                        </th> -->
                                         <th name="th_serial_number" class="text-center" t-if="has_serial_number">
                                             <strong>Nro de Serie</strong>
                                         </th>
@@ -116,7 +116,8 @@
                                     <t t-foreach="o.move_ids_without_package.sorted(key=lambda m: m.product_id.id)" t-as="move">
                                         <!-- In case you come accross duplicated lines, ask NIM or LAP -->
                                         <t t-foreach="move.move_line_ids.sorted(key=lambda ml: ml.location_id.id)" t-as="ml">
-                                            <t t-if="move.sale_line_id" t-set="amount_total" t-value="amount_total + move.sale_line_id.price_subtotal" />
+                                            <t t-if="move.sale_line_id" t-set="amount_total" t-value="amount_total + move.sale_line_id.sudo().price_subtotal" />
+                                            <t t-if="move.purchase_line_id" t-set="amount_total" t-value="amount_total + move.purchase_line_id.sudo().price_subtotal"/>
                                             <tr>
                                                 <td>
                                                     <span t-field="ml.product_id.display_name"/>
@@ -129,19 +130,21 @@
                                                     <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
                                                 </td>
                                                 <td>
-                                                    <span t-if="move.sale_line_id" t-field="move.sale_line_id.price_unit" />
+                                                    <span t-if="move.sale_line_id" t-field="move.sale_line_id.sudo().price_unit" />
+                                                    <span t-if="move.purchase_line_id" t-field="move.purchase_line_id.sudo().price_unit" />
                                                 </td>
                                                 <td t-if="total_discount != 0">
                                                     <t t-if="move.sale_line_id.discount != 0">
                                                         <t t-set="qty" t-value="ml.qty_done if o.state=='done' else ml.product_uom_qty" />
-                                                        <t t-set="price_discount" t-value="move.sale_line_id.price_unit * (move.sale_line_id.discount/100)" />
+                                                        <t t-set="price_discount" t-value="move.sale_line_id.sudo().price_unit * (move.sale_line_id.sudo().discount/100)" />
                                                         <span t-esc="qty * price_discount" />
                                                     </t>
                                                 </td>
                                                 <td>
-                                                    <span t-if="move.sale_line_id" t-field="move.sale_line_id.price_subtotal" />
+                                                    <span t-if="move.sale_line_id" t-field="move.sale_line_id.sudo().price_subtotal" />
+                                                    <span t-if="move.purchase_line_id" t-field="move.purchase_line_id.sudo().price_subtotal" />
                                                 </td>
-                                                <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
+                                                <!-- <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
                                                     <span t-esc="ml.location_id.display_name"/>
                                                     <t t-if="ml.package_id">
                                                         <span t-field="ml.package_id"/>
@@ -154,7 +157,7 @@
                                                             <span t-field="ml.result_package_id"/>
                                                         </t>
                                                     </div>
-                                                </td>
+                                                </td> -->
                                                 <td class=" text-center h6" t-if="has_serial_number">
                                                     <img t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', ml.lot_id.name or ml.lot_name, 400, 100)" style="width:100%;height:35px;" alt="Barcode"/>
 
