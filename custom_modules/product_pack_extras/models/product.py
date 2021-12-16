@@ -14,7 +14,7 @@ class ProductTemplateInh(models.Model):
             # Uncomment to use static_pack_price
             # precio_kit = record.product_id.product_pack_price
             prices = [x.product_id.list_price for x in self.pack_line_ids]
-            sum_precios = sum(prices)
+            sum_precios = sum(prices) if sum(prices) != 0 else 1
             divisor_ponderado = precio_kit / sum_precios
             for line in record.pack_line_ids:
                 precio = line.product_id.list_price
