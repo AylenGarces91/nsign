@@ -35,14 +35,15 @@ class SaleOrderLineInh(models.Model):
         return record
 
     def write(self, vals):
-        if self.product_id.pack_ok:
-            vals['price_unit'] = 0
-            vals['price_pack'] = self.product_id.list_price
-            # uncomment to use static_pack_price
-            # vals['price_pack'] = self.product_id.product_pack_price
-        if self.pack_parent_line_id.id:
-            for pack_line in self.pack_parent_line_id.product_id.pack_line_ids:
-                if pack_line.product_id.id == self.product_id.id:
-                    vals['price_unit'] = pack_line.extra_price_unit
-        res = super().write(vals)
-        return res
+        for record in self:
+            if self.product_id.pack_ok:
+                vals['price_unit'] = 0
+                vals['price_pack'] = self.product_id.list_price
+                # uncomment to use static_pack_price
+                # vals['price_pack'] = self.product_id.product_pack_price
+            if self.pack_parent_line_id.id:
+                for pack_line in self.pack_parent_line_id.product_id.pack_line_ids:
+                    if pack_line.product_id.id == self.product_id.id:
+                        vals['price_unit'] = pack_line.extra_price_unit
+            res = super().write(vals)
+            #return res
