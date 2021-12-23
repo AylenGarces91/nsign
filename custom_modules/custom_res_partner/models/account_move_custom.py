@@ -14,4 +14,4 @@ class AccountMoveCustom(models.Model):
         if partner and partner.x_purchase_order_number_mandatory and self.state is False:
             raise UserError("No es posible realizar la Factura, es obligatorio para este usuario disponer del numero de pedido de compra para poder realizar la factura de venta.")
         else:
-            super(AccountMoveCustom, self).create(vals)
+            return super(AccountMoveCustom, self).create(vals)
