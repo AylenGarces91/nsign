@@ -49,3 +49,13 @@
 	path = OCA/product-pack
 	url = git@github.com:OCA/product-pack.git
 	branch = 13.0
+
+[submodule "OCA/project"]
+	path = OCA/project
+	url = git@github.com:OCA/project.git
+	branch = 13.0
+
+[submodule "OCA/account-analytic"]
+	path = OCA/account-analytic
+	url = git@github.com:OCA/account-analytic.git
+	branch = 13.0

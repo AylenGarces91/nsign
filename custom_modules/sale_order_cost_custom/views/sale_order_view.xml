@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="sale_order_cost_amount_custom">
+        <field name="name">sale.order.cost.amount.view.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='tax_id']" position="before">
+                <field name="x_cost_amount" string="Importe Coste"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
