@@ -10,6 +10,7 @@
         'views/invoice_custom.xml',
         'views/sale_order_custom.xml',
         'views/purchase_order_custom.xml',
+        'views/external_layout_box_custom.xml'
     ],
     'author': 'Develoop Software',
     'images': ['static/description/icon.png'],

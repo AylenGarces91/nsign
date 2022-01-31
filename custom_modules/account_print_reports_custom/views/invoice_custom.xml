@@ -123,7 +123,7 @@
                             <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
                                 <t t-if="not line.display_type" name="account_invoice_line_accountable">
                                     <td name="account_invoice_line_ref"><span t-field="line.product_id.name" t-options="{'widget': 'text'}"/></td>
-                                    <td name="account_invoice_line_name"><span t-field="line.name" t-options="{'widget': 'text'}"/></td>
+                                    <td name="account_invoice_line_name"><span t-esc="line.name[:250] + '..' if len(line.name)&gt;252 else line.name" t-options="{'widget': 'text'}"/></td>
                                     <td class="text-right">
                                         <span t-field="line.quantity" t-options='{"widget": "float", "precision": 0}'/>
                                     </td>

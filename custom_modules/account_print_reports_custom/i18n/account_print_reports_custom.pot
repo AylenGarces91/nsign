@@ -331,3 +331,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_print_reports_custom.report_invoice_document_custom
 msgid "<span>Serial number</span>"
 msgstr ""
+
+#. module: account_print_reports_custom
+#: model_terms:ir.ui.view,arch_db:account_print_reports_custom.header_footer_report_custom
+msgid "Page:"
+msgstr ""
