@@ -1,6 +1,5 @@
 from odoo import models, fields, api
 
-
 class StockPickingInh(models.Model):
     _inherit = 'stock.picking'
 
