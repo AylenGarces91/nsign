@@ -1,3 +1,4 @@
+from itertools import product
 from odoo import models, fields, api
 
 
@@ -24,10 +25,10 @@ class SaleOrderLineInh(models.Model):
     def create(self, vals):
         record = super().create(vals)
         if record.product_id.pack_ok:
-            price_unit = record.product_id.list_price
+            # price_unit = record.product_id.list_price
             # Uncomment to use static_pack_price
             # price_unit = record.product_id.product_pack_price
-            record.update({'price_unit': 0, 'price_pack': price_unit})
+            record.update({'price_unit': 0, 'price_pack': record.price_unit})
         if record.pack_parent_line_id.id:
             for pack_line in record.pack_parent_line_id.product_id.pack_line_ids:
                 if pack_line.product_id.id == record.product_id.id:
@@ -42,8 +43,12 @@ class SaleOrderLineInh(models.Model):
                 # uncomment to use static_pack_price
                 # vals['price_pack'] = self.product_id.product_pack_price
             if record.pack_parent_line_id.id:
+                tax_id = record.pack_parent_line_id.tax_id.ids
                 for pack_line in record.pack_parent_line_id.product_id.pack_line_ids:
                     if pack_line.product_id.id == record.product_id.id:
+                        vals['product_uom_qty'] = pack_line.quantity * record.product_uom_qty
                         vals['price_unit'] = pack_line.extra_price_unit
+                        vals['discount'] = record.pack_parent_line_id.discount
+                        vals['tax_id'] = [(6,0, tax_id)]
         res = super().write(vals)
         return res
