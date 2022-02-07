@@ -9,9 +9,10 @@ class AccountMoveCustom(models.Model):
 
     @api.model
     def create(self, vals):
-        partner = self.env['res.partner'].search([('id', '=', vals['partner_id'])])
+        if vals.get('partner_id', False):
+            partner = self.env['res.partner'].search([('id', '=', vals['partner_id'])])
        
-        if partner and partner.x_purchase_order_number_mandatory and self.state is False:
-            raise UserError("No es posible realizar la Factura, es obligatorio para este usuario disponer del numero de pedido de compra para poder realizar la factura de venta.")
-        else:
-            return super(AccountMoveCustom, self).create(vals)
+            if partner and partner.x_purchase_order_number_mandatory and self.state is False:
+                raise UserError("No es posible realizar la Factura, es obligatorio para este usuario disponer del numero de pedido de compra para poder realizar la factura de venta.")
+        
+        return super(AccountMoveCustom, self).create(vals)
